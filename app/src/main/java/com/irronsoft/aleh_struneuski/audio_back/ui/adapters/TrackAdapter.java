@@ -59,7 +59,13 @@ public class TrackAdapter extends BaseAdapter {
         }
 
         holder.titleTextView.setText(track.getTitle());
-        Picasso.with(mContext).load(track.getArtworkURL()).fit().into(holder.trackImageView);
+
+        String iconUrl = track.getArtworkURL();
+        if (null == iconUrl || iconUrl.isEmpty()){
+            Picasso.with(mContext).load(R.drawable.empty_icon).fit().into(holder.trackImageView);
+        } else {
+            Picasso.with(mContext).load(track.getArtworkURL()).fit().into(holder.trackImageView);
+        }
 
 
         return convertView;

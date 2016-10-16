@@ -22,6 +22,7 @@
         </activity>
 
         <activity
+            android:theme="@style/AppTheme.NoActionBar"
             android:name=".ui.activities.PlayerListActivity">
         </activity>
     </application>

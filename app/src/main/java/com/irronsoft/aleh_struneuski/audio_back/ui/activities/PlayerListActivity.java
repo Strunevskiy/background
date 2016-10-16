@@ -2,10 +2,9 @@ package com.irronsoft.aleh_struneuski.audio_back.ui.activities;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,29 +14,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.irronsoft.aleh_struneuski.audio_back.R;
-import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.PlayList;
+
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
 import com.irronsoft.aleh_struneuski.audio_back.constants.ProjectConstants;
-import com.irronsoft.aleh_struneuski.audio_back.httpclient.RestClient;
-import com.irronsoft.aleh_struneuski.audio_back.httpclient.services.SoundCloundService;
+
 import com.irronsoft.aleh_struneuski.audio_back.ui.adapters.TrackAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+
 import java.util.List;
 
-import retrofit2.Callback;
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
+
 
 /**
  * Created by alehstruneuski on 6/13/16.
  */
-public class PlayerListActivity extends AppCompatActivity implements Callback<List<PlayList>> {
+public class PlayerListActivity extends AppCompatActivity  {
 
     private static final String TAG = "MainActivity";
     private List<Track> mListItems;
@@ -106,10 +99,6 @@ public class PlayerListActivity extends AppCompatActivity implements Callback<Li
             }
         });
 
-//        SoundCloundService scService = RestClient.getInstance().createService(SoundCloundService.class);
-//        Call<List<PlayList>> playLists = scService.getPlayLists();
-//        playLists.enqueue(this);
-
     }
 
     private void loadTracks(List<Track> tracks) {
@@ -174,20 +163,4 @@ public class PlayerListActivity extends AppCompatActivity implements Callback<Li
     }
 
 
-    @Override
-    public void onResponse(Call<List<PlayList>> call, Response<List<PlayList>> response) {
-//        setProgressBarIndeterminateVisibility(false);
-//        ArrayAdapter<Question> adapter = (ArrayAdapter<Question>) getListAdapter();
-//        adapter.clear();
-//        adapter.addAll(response.body().items);
-        try {
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onFailure(Call<List<PlayList>> call, Throwable t) {
-
-    }
 }
