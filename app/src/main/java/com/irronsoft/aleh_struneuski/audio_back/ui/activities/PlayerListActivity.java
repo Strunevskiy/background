@@ -30,11 +30,12 @@ import java.util.List;
 /**
  * Created by alehstruneuski on 6/13/16.
  */
-public class PlayerListActivity extends AppCompatActivity  {
+public class PlayerListActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
     private List<Track> mListItems;
     private TrackAdapter mAdapter;
+    private ImageView mBackToHome;
     private TextView mSelectedTrackTitle;
     private ImageView mSelectedTrackImage;
     private MediaPlayer mMediaPlayer;
@@ -57,7 +58,7 @@ public class PlayerListActivity extends AppCompatActivity  {
         mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                mPlayerControl.setImageResource(R.drawable.ic_play);
+                mPlayerControl.setImageResource(R.drawable.ic_play_button);
             }
         });
 
@@ -66,10 +67,12 @@ public class PlayerListActivity extends AppCompatActivity  {
         mAdapter = new TrackAdapter(this, mListItems);
         listView.setAdapter(mAdapter);
 
+        mBackToHome = (ImageView) findViewById(R.id.back_button);
         mSelectedTrackTitle = (TextView) findViewById(R.id.selected_track_title);
         mSelectedTrackImage = (ImageView) findViewById(R.id.selected_track_image);
         mPlayerControl = (ImageView) findViewById(R.id.player_control);
 
+        mBackToHome.setOnClickListener(this);
         mPlayerControl.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,7 +113,7 @@ public class PlayerListActivity extends AppCompatActivity  {
     private void togglePlayPause() {
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.pause();
-            mPlayerControl.setImageResource(R.drawable.ic_play);
+            mPlayerControl.setImageResource(R.drawable.ic_play_button);
         } else {
             mMediaPlayer.start();
             mPlayerControl.setImageResource(R.drawable.ic_pause);
@@ -163,4 +166,14 @@ public class PlayerListActivity extends AppCompatActivity  {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.back_button:
+                onBackPressed();
+                break;
+            default:
+                break;
+        }
+    }
 }

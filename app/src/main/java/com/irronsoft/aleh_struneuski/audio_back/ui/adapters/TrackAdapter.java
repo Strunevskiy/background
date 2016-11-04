@@ -62,7 +62,7 @@ public class TrackAdapter extends BaseAdapter {
 
         String iconUrl = track.getArtworkURL();
         if (null == iconUrl || iconUrl.isEmpty()){
-            Picasso.with(mContext).load(R.drawable.empty_icon).fit().into(holder.trackImageView);
+            Picasso.with(mContext).load(R.mipmap.ic_launcher).fit().into(holder.trackImageView);
         } else {
             Picasso.with(mContext).load(track.getArtworkURL()).fit().into(holder.trackImageView);
         }
