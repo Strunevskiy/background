@@ -9,12 +9,44 @@
         android:layout_height="match_parent"
         android:layout_width="@dimen/player_height" />
 
-    <TextView
-        android:layout_centerVertical="true"
-        android:id="@+id/track_title"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_toRightOf="@id/track_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body2"/>
+        android:layout_alignParentLeft="@id/track_image"
+        android:paddingLeft="25dip"
+        android:paddingRight="25dip">
+
+
+        <RelativeLayout
+            android:id="@+id/track_meta_data"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingTop="18dip"
+            android:paddingBottom="18dip">
+
+            <TextView
+                android:id="@+id/track_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="21dp"
+                android:maxLines="1"
+                android:textColor="#CFCFCF"/>
+
+            <TextView
+                android:id="@+id/track_singer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/track_title"
+                android:maxLines="1"
+                android:textSize="18dp"
+                android:textColor="#6C6C6C"/>
+        </RelativeLayout>
+
+
+
+    </RelativeLayout>
+
+
 
 </RelativeLayout>
