@@ -27,8 +27,6 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textSize="20dp" />
-
-
     </RelativeLayout>
 
 
@@ -40,102 +38,10 @@
         android:divider="@null"
         android:dividerHeight="0dp"/>
 
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/player_control_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-
-    <RelativeLayout
-            android:id="@+id/toolbar_buttom"
-            android:background="#333333"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/player_height">
-
-        <ImageView
-            android:id="@+id/selected_track_image"
-            android:layout_width="@dimen/player_height"
-            android:layout_height="match_parent"/>
-
-
-
-        <RelativeLayout
-            android:id="@+id/nested_toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/player_height"
-            android:layout_toRightOf="@id/selected_track_image"
-            android:background="@color/cell"
-            android:alpha="0.7">
-
-
-            <ImageView
-                android:id="@+id/image_bluer_player"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/cell"
-                android:alpha="0.5"/>
-
-
-
-            <RelativeLayout
-                android:id="@+id/top_nested_toolbar_title"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_alignParentTop="true"
-                android:paddingLeft="25dip"
-                android:paddingRight="25dip">
-
-                <TextView
-                    android:id="@+id/selected_track_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:layout_marginLeft="20dp"
-                    android:textColor="@color/white"
-                    android:textSize="18dp"
-                    android:singleLine="true"
-                    android:ellipsize="marquee"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:marqueeRepeatLimit="marquee_forever"
-                    android:scrollHorizontally="true"/>
-
-
-            </RelativeLayout>
-
-
-
-            <RelativeLayout
-                android:id="@+id/bottom_nested_toolbar_player_controls"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
-                android:paddingLeft="25dip"
-                android:paddingRight="25dip">
-
-                <ImageView
-                    android:id="@+id/player_control"
-                    android:layout_width="@dimen/image_size"
-                    android:layout_height="@dimen/image_size"
-                    android:layout_centerInParent="true"
-                    android:src = "@drawable/ic_play_button"/>
-
-
-                <ImageView
-                    android:id="@+id/player_control_prev"
-                    android:layout_width="@dimen/image_size"
-                    android:layout_height="@dimen/image_size"
-                    android:layout_alignParentLeft="true"
-                    android:src = "@drawable/ic_rewind"/>
-                <ImageView
-                    android:id="@+id/player_control_next"
-                    android:layout_width="@dimen/image_size"
-                    android:layout_height="@dimen/image_size"
-                    android:layout_alignParentRight="true"
-                    android:src = "@drawable/ic_fast_forward"/>
-
-
-
-            </RelativeLayout>
-
-        </RelativeLayout>
-
-    </RelativeLayout>
 
 </LinearLayout>
