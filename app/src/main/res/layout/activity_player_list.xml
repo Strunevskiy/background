@@ -10,14 +10,12 @@
         android:background="?attr/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
-
-
         <ImageView
             android:id="@+id/back_button"
             android:layout_width="@dimen/image_size"
             android:layout_height="@dimen/image_size"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_list"
+            android:src="@drawable/ic_action_previous"
             android:clickable="true"/>
 
         <TextView
@@ -28,7 +26,6 @@
             android:layout_centerInParent="true"
             android:textSize="20dp" />
     </RelativeLayout>
-
 
     <ListView
         android:id="@+id/track_list_view"

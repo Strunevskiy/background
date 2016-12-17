@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class PlayerListActivity extends FragmentActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
-    private static final String TAG = "MainActivity";
+    private static final String TAG = PlayerListActivity.class.getSimpleName();
     private List<Track> mListItems;
     private TrackAdapter mAdapter;
     private ImageView mBackToHome;
