@@ -1,6 +1,5 @@
 package com.irronsoft.aleh_struneuski.audio_back.ui.activities;
 
-
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
@@ -22,8 +21,6 @@ import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.PlayerFragment;
 
 import java.util.Iterator;
 import java.util.List;
-
-
 
 /**
  * Created by alehstruneuski on 6/13/16.
@@ -50,13 +47,9 @@ public class PlayerListActivity extends FragmentActivity implements View.OnClick
         listView.setAdapter(mAdapter);
         listView.setOnItemClickListener(this);
 
-
         mBackToHome = (ImageView) findViewById(R.id.back_button);
         mBackToHome.setOnClickListener(this);
     }
-
-
-
 
     private void doFillter(List<Track> listOfTrack) {
         Iterator<Track> tracks = listOfTrack.iterator();

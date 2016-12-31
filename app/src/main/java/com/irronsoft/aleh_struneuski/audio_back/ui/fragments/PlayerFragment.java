@@ -24,6 +24,8 @@ import com.squareup.picasso.Target;
 
 import java.io.IOException;
 
+import static android.media.MediaPlayer.*;
+
 /**
  * Created by alehstruneuski on 11/25/16.
  */
@@ -70,19 +72,20 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 
         mMediaPlayer = new MediaPlayer();
         mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+        mMediaPlayer.setOnPreparedListener(new OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
                 togglePlayPause();
             }
         });
-        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+        mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
                 mPlayerControl.setImageResource(R.drawable.ic_play_button);
+                playerListActivity.getTrack(currentTrack, true);
+
             }
         });
-
         handleClickOnTrack(trackOnLoad, currentTrack);
     }
 

@@ -6,30 +6,50 @@
     android:layout_height="match_parent"
     tools:showIn="@layout/activity_main">
 
-    <RelativeLayout
-        android:id="@+id/app_bar"
-        android:background="?attr/colorPrimary"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
-        <ImageView
-            android:id="@+id/list_of_option"
-            android:layout_width="@dimen/image_size"
-            android:layout_height="@dimen/image_size"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_list"
-            android:clickable="true"/>
-    </RelativeLayout>
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
+        </android.support.design.widget.AppBarLayout>
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_below="@id/app_bar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/grid_layout_margin"
+            android:stretchMode="columnWidth"
+            android:numColumns="auto_fit"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="fill"/>
 
-    <GridView
-        android:id="@+id/gridView"
-        android:layout_below="@id/app_bar"
+    <include
+        layout="@layout/app_bar_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.v4.widget.DrawerLayout
+        android:layout_below="@id/app_bar_layout"
+        android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/grid_layout_margin"
-        android:stretchMode="columnWidth"
-        android:numColumns="auto_fit"
-        android:clickable="true"
-        android:focusable="true"
-        android:gravity="fill"/>
+        android:fitsSystemWindows="false"
+        tools:openDrawer="start">
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:menu="@menu/activity_main_drawer" />
+    </android.support.v4.widget.DrawerLayout>
 
 </RelativeLayout>
