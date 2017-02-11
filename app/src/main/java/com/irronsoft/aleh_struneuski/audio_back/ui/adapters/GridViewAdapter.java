@@ -62,7 +62,7 @@ public class GridViewAdapter extends ArrayAdapter<PlayList> implements AdapterVi
         ViewHolder holder;
 
         if (row == null) {
-            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
+            LayoutInflater inflater =  (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(layoutResourceId, parent, false);
             setDimensOfCardViewItem(row);
 
@@ -88,11 +88,11 @@ public class GridViewAdapter extends ArrayAdapter<PlayList> implements AdapterVi
         PlayList playList = mGridData.get(position);
         List<Track> tracks =  playList.getTracks();
 
-        Intent playerListActivity = new Intent(mContext, PlayerListActivity.class);
+        Intent playerListActivity = new Intent(getContext(), PlayerListActivity.class);
+        playerListActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         playerListActivity.putParcelableArrayListExtra("album_track_list", (ArrayList<? extends Parcelable>) tracks);
-        mContext.startActivity(playerListActivity);
+        getContext().startActivity(playerListActivity);
     }
-
 
     private void setDimensOfCardViewItem(View row) {
         float hightPer = 27.34375f;

@@ -2,34 +2,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
+
         <item
             android:id="@+id/nav_home"
-            android:title="@string/nav_home" />
+            android:title="@string/nav_home"
+            android:icon="@mipmap/ic_launcher"/>
         <item
-            android:id="@+id/nav_photos"
-            android:title="@string/nav_photos" />
+            android:id="@+id/nav_my_music"
+            android:title="@string/nav_my_music" />
         <item
-            android:id="@+id/nav_movies"
-            android:title="@string/nav_movies" />
-
-        <item
-            android:id="@+id/nav_notifications"
-            android:title="@string/nav_notifications" />
-
-        <item
-            android:id="@+id/nav_settings"
-            android:title="@string/nav_settings" />
+            android:id="@+id/nav_search_for_track"
+            android:title="@string/nav_search_for_track" />
     </group>
 
-    <item android:title="Other">
+    <item android:title="Settings">
         <menu>
             <item
-                android:id="@+id/nav_about_us"
-                android:title="@string/nav_about_us" />
+                android:id="@+id/setting"
+                android:title="@string/settings" />
             <item
-                android:id="@+id/nav_privacy_policy"
-                android:title="@string/privacy_policy" />
+                android:id="@+id/share_app"
+                android:title="@string/share_app" />
         </menu>
     </item>
+
 
 </menu>

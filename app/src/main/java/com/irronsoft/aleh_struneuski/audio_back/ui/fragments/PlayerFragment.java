@@ -5,7 +5,9 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -14,6 +16,39 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.LoadControl;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
+import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource;
+import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
+import com.google.android.exoplayer2.extractor.ExtractorsFactory;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection;
+import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
+import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
+import com.google.android.exoplayer2.trackselection.TrackSelector;
+import com.google.android.exoplayer2.upstream.Allocator;
+import com.google.android.exoplayer2.upstream.DataSource;
+import com.google.android.exoplayer2.upstream.DefaultAllocator;
+import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.upstream.cache.Cache;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
+import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
+import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
+import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor;
+import com.google.android.exoplayer2.upstream.cache.SimpleCache;
+import com.google.android.exoplayer2.util.Util;
 import com.irronsoft.aleh_struneuski.audio_back.R;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
 import com.irronsoft.aleh_struneuski.audio_back.constants.ProjectConstants;
@@ -22,7 +57,9 @@ import com.irronsoft.aleh_struneuski.audio_back.utils.BlurBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
-import java.io.IOException;
+import java.util.Arrays;
+import java.util.Set;
+
 
 import static android.media.MediaPlayer.*;
 
@@ -32,16 +69,35 @@ import static android.media.MediaPlayer.*;
 public class PlayerFragment extends Fragment implements View.OnClickListener {
 
     private PlayerListActivity playerListActivity;
-    private MediaPlayer mMediaPlayer;
+
+//    private MediaPlayer mMediaPlayer;
+
     private TextView mSelectedTrackTitle;
+
     private ImageView mSelectedTrackImage;
     private ImageView mBlurePlayer;
     private ImageView mPlayerControl;
+
     private ImageView mPlayerControlPrev;
     private ImageView mPlayerControlNext;
+
     private Target loadtarget;
     private Track trackOnLoad;
     private int currentTrack;
+
+
+
+
+    private SimpleExoPlayer exoPlayer;
+
+    private DefaultHttpDataSourceFactory dataSourceFactory;
+
+    private ExtractorsFactory extractor;
+
+    private MediaSource audioSource;
+
+    private CacheDataSourceFactory cacheDataSource;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,19 +126,52 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         mSelectedTrackImage = (ImageView) getView().findViewById(R.id.selected_track_image);
         mBlurePlayer = (ImageView) getView().findViewById(R.id.image_bluer_player);
 
-        mMediaPlayer = new MediaPlayer();
-        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mMediaPlayer.setOnPreparedListener(new OnPreparedListener() {
+
+        Cache cache = new SimpleCache(getContext().getApplicationContext().getCacheDir(), new NoOpCacheEvictor());
+
+
+        Set<String> keys = cache.getKeys();
+        TrackSelector trackSelector = new DefaultTrackSelector();
+        LoadControl loadControl = new DefaultLoadControl();
+
+        exoPlayer = ExoPlayerFactory.newSimpleInstance(getContext().getApplicationContext(), trackSelector, loadControl);
+        extractor = new DefaultExtractorsFactory();
+        dataSourceFactory = new DefaultHttpDataSourceFactory("Android");
+        cacheDataSource = new CacheDataSourceFactory(cache, dataSourceFactory, 0);
+
+
+        exoPlayer.addListener(new ExoPlayer.EventListener() {
+
             @Override
-            public void onPrepared(MediaPlayer mp) {
-                togglePlayPause();
+            public void onTimelineChanged(Timeline timeline, Object manifest) {
             }
-        });
-        mMediaPlayer.setOnCompletionListener(new OnCompletionListener() {
+
             @Override
-            public void onCompletion(MediaPlayer mp) {
-                mPlayerControl.setImageResource(R.drawable.ic_play_button);
-                playerListActivity.getTrack(currentTrack, true);
+            public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+            }
+
+            @Override
+            public void onLoadingChanged(boolean isLoading) {
+
+            }
+
+            @Override
+            public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+
+                if (playbackState == ExoPlayer.STATE_ENDED) {
+                    mPlayerControl.setImageResource(R.drawable.ic_play_button);
+                    playerListActivity.getTrack(currentTrack, true);
+                }
+
+            }
+
+            @Override
+            public void onPlayerError(ExoPlaybackException error) {
+
+            }
+
+            @Override
+            public void onPositionDiscontinuity() {
 
             }
         });
@@ -133,25 +222,24 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 
         setTrackImageToPlayer(track.getArtworkURL());
 
-        if (mMediaPlayer.isPlaying() || !mMediaPlayer.isPlaying()) {
-            mMediaPlayer.stop();
-            mMediaPlayer.reset();
+        if (exoPlayer.getPlayWhenReady()|| !exoPlayer.getPlayWhenReady()) {
+            exoPlayer.stop();
         }
 
-        try {
-            mMediaPlayer.setDataSource(track.getStreamURL() + "?client_id=" + ProjectConstants.CLIENT_ID);
-            mMediaPlayer.prepareAsync();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String urlOfTrackStream = track.getStreamURL() + "?client_id=" + ProjectConstants.CLIENT_ID;
+        audioSource = new ExtractorMediaSource(Uri.parse(urlOfTrackStream), cacheDataSource, extractor, null, null);
+        exoPlayer.prepare(audioSource);
+        exoPlayer.setPlayWhenReady(true);
     }
 
     private void togglePlayPause() {
-        if (mMediaPlayer.isPlaying()) {
-            mMediaPlayer.pause();
+        exoPlayer.getPlaybackState();
+
+        if (exoPlayer.getPlayWhenReady()) {
+            exoPlayer.setPlayWhenReady(false);
             mPlayerControl.setImageResource(R.drawable.ic_play_button);
         } else {
-            mMediaPlayer.start();
+            exoPlayer.setPlayWhenReady(true);
             mPlayerControl.setImageResource(R.drawable.ic_pause);
         }
     }
@@ -159,12 +247,12 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mMediaPlayer != null) {
-            if (mMediaPlayer.isPlaying()) {
-                mMediaPlayer.stop();
+        if (exoPlayer != null) {
+            if (exoPlayer.getPlayWhenReady()) {
+                exoPlayer.setPlayWhenReady(false);
             }
-            mMediaPlayer.release();
-            mMediaPlayer = null;
+            exoPlayer.release();
+            exoPlayer = null;
         }
     }
 
@@ -184,6 +272,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                 break;
         }
     }
+
 
 }
 

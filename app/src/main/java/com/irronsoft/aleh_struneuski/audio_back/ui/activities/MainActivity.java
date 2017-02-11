@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -24,6 +25,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -34,9 +36,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.irronsoft.aleh_struneuski.audio_back.R;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.PlayList;
+import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
 import com.irronsoft.aleh_struneuski.audio_back.httpclient.RestClient;
 import com.irronsoft.aleh_struneuski.audio_back.httpclient.services.SoundCloundService;
 import com.irronsoft.aleh_struneuski.audio_back.ui.adapters.GridViewAdapter;
+import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.HomeFragment;
+import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.PlayerFragment;
 import com.irronsoft.aleh_struneuski.audio_back.utils.ResolutionUtils;
 
 import java.util.ArrayList;
@@ -49,35 +54,23 @@ import retrofit2.Retrofit;
 
 import static android.view.ViewGroup.*;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements HomeFragment.OnHomeFragmentInteractionListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private ArrayList playListGridData;
-    private GridView mGridView;
-    private GridViewAdapter mGridAdapter;
-
-
     private NavigationView navigationView;
-    private DrawerLayout drawer;
+    private DrawerLayout drawerLayout;
     private View navHeader;
     private Toolbar toolbar;
-    private FloatingActionButton fab;
-
-    // urls to load navigation header background image
-    // and profile image
-    private static final String urlNavHeaderBg = "http://api.androidhive.info/images/nav-menu-header-bg.jpg";
-    private static final String urlProfileImg = "https://lh3.googleusercontent.com/eCtE_G34M9ygdkmOpYvCag1vBARCmZwnVS6rS5t4JLzJ6QgQSBquM0nuTsCpLhYbKljoyS-txg";
+//    private FloatingActionButton fab;
 
     // index to identify current nav menu item
     public static int navItemIndex = 0;
 
     // tags used to attach the fragments
-    private static final String TAG_HOME = "home";
-    private static final String TAG_PHOTOS = "photos";
-    private static final String TAG_MOVIES = "movies";
-    private static final String TAG_NOTIFICATIONS = "notifications";
-    private static final String TAG_SETTINGS = "settings";
+    private static final String TAG_HOME = "Background";
+    private static final String TAG_MY_MUSIC = "My Music";
+    private static final String TAG_SEARCH_FOR_TRACK = "Search";
     public static String CURRENT_TAG = TAG_HOME;
 
     // toolbar titles respected to selected nav menu item
@@ -98,32 +91,26 @@ public class MainActivity extends AppCompatActivity {
 
         mHandler = new Handler();
 
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.main_content);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+
+/////        fab = (FloatingActionButton) findViewById(R.id.fab);
 
         // load toolbar titles from string resources
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        <include  layout="@layout/app_bar_main"
+//        android:layout_width="match_parent"
+//        android:layout_height="match_parent" />
 
-        mGridView = (GridView) findViewById(R.id.gridView);
-        mGridView.setHorizontalSpacing(ResolutionUtils.convertPercentToPixelWidth(this.getApplicationContext(),1.25f));
-        mGridView.setVerticalSpacing(ResolutionUtils.convertPercentToPixelHight(this.getApplicationContext(), 0.7525f));
 
-        //Initialize with empty data
-        playListGridData = new ArrayList<PlayList>();
-        mGridAdapter = new GridViewAdapter(this, R.layout.grid_item_layout, playListGridData);
-        mGridView.setAdapter(mGridAdapter);
-        mGridView.setOnItemClickListener(mGridAdapter);
-
-        setPlayList();
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
 
         // load nav menu header data
         loadNavHeader();
@@ -138,25 +125,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setPlayList() {
-        RestClient restClient = RestClient.getInstance();
-        Retrofit retrofitClient = restClient.getRetrofitClient();
-        SoundCloundService soundCloundService = retrofitClient.create(SoundCloundService.class);
-
-        Call<List<PlayList>> playList = soundCloundService.getPlayLists();
-        playList.enqueue(new Callback<List<PlayList>>() {
-            @Override
-            public void onResponse(Call<List<PlayList>> call, Response<List<PlayList>> response) {
-                List<PlayList> playLists = response.body();
-                mGridAdapter.setGridData(playLists);
-            }
-            @Override
-            public void onFailure(Call<List<PlayList>> call, Throwable t) {
-            }
-        });
-
-    }
-
     private void loadNavHeader() {
     }
 
@@ -166,18 +134,20 @@ public class MainActivity extends AppCompatActivity {
      */
     private void loadHomeFragment() {
         // selecting appropriate nav menu item
+
         selectNavMenu();
 
         // set toolbar title
-       setToolbarTitle();
+        setToolbarTitle();
 
         // if user select the current navigation menu again, don't do anything
         // just close the navigation drawer
         if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
-            drawer.closeDrawers();
+            drawerLayout.closeDrawers();
 
             // show or hide the fab button
-            toggleFab();
+           //
+            // toggleFab();
             return;
         }
 
@@ -189,12 +159,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // update the main content by replacing fragments
-//                Fragment fragment = getHomeFragment();
-//                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-//                        android.R.anim.fade_out);
-//                fragmentTransaction.replace(R.id.frame, fragment, CURRENT_TAG);
-//                fragmentTransaction.commitAllowingStateLoss();
+                Fragment fragment = getHomeFragment();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                        android.R.anim.fade_out);
+                fragmentTransaction.replace(R.id.frame, fragment, CURRENT_TAG);
+                fragmentTransaction.commitAllowingStateLoss();
             }
         };
 
@@ -204,10 +174,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // show or hide the fab button
-        toggleFab();
+        // toggleFab();
 
         //Closing drawer on item click
-        drawer.closeDrawers();
+        drawerLayout.closeDrawers();
 
         // refresh toolbar menu
         invalidateOptionsMenu();
@@ -217,8 +187,8 @@ public class MainActivity extends AppCompatActivity {
         switch (navItemIndex) {
             case 0:
                 // home
-                //HomeFragment homeFragment = new HomeFragment();
-                //return homeFragment;
+                HomeFragment homeFragment = new HomeFragment();
+                return homeFragment;
             case 1:
                 // photos
                // PhotosFragment photosFragment = new PhotosFragment();
@@ -260,32 +230,24 @@ public class MainActivity extends AppCompatActivity {
                         navItemIndex = 0;
                         CURRENT_TAG = TAG_HOME;
                         break;
-                    case R.id.nav_photos:
+                    case R.id.nav_my_music:
                         navItemIndex = 1;
-                        CURRENT_TAG = TAG_PHOTOS;
+                        CURRENT_TAG = TAG_MY_MUSIC;
                         break;
-                    case R.id.nav_movies:
+                    case R.id.nav_search_for_track:
                         navItemIndex = 2;
-                        CURRENT_TAG = TAG_MOVIES;
+                        CURRENT_TAG = TAG_SEARCH_FOR_TRACK;
                         break;
-                    case R.id.nav_notifications:
-                        navItemIndex = 3;
-                        CURRENT_TAG = TAG_NOTIFICATIONS;
-                        break;
-                    case R.id.nav_settings:
-                        navItemIndex = 4;
-                        CURRENT_TAG = TAG_SETTINGS;
-                        break;
-                    case R.id.nav_about_us:
+                    //case R.id.nav_about_us:
                         // launch new intent instead of loading fragment
                         // startActivity(new Intent(MainActivity.this, MainActivity.class));
-                        drawer.closeDrawers();
-                        return true;
-                    case R.id.nav_privacy_policy:
+                     //   drawer.closeDrawers();
+                     //   return true;
+                    //case R.id.nav_privacy_policy:
                         // launch new intent instead of loading fragment
                        //  startActivity(new Intent(MainActivity.this, PrivacyPolicyActivity.class));
-                        drawer.closeDrawers();
-                        return true;
+                      //  drawer.closeDrawers();
+                      //  return true;
                     default:
                         navItemIndex = 0;
                 }
@@ -305,32 +267,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.openDrawer, R.string.closeDrawer) {
-
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.openDrawer, R.string.closeDrawer) {
             @Override
             public void onDrawerClosed(View drawerView) {
                 // Code here will be triggered once the drawer closes as we dont want anything to happen so we leave this blank
                 super.onDrawerClosed(drawerView);
             }
-
             @Override
             public void onDrawerOpened(View drawerView) {
                 // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
                 super.onDrawerOpened(drawerView);
             }
         };
+        actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
 
         //Setting the actionbarToggle to drawer layout
-        drawer.setDrawerListener(actionBarDrawerToggle);
-
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
         //calling sync state is necessary or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
     }
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawers();
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawers();
             return;
         }
 
@@ -395,15 +355,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // show or hide the fab
-    private void toggleFab() {
-        if (navItemIndex == 0)
-            fab.show();
-        else
-            fab.hide();
-    }
+//    private void toggleFab() {
+//        if (navItemIndex == 0)
+//            fab.show();
+//        else
+//            fab.hide();
+//    }
 
     private void setToolbarTitle() {
-        getSupportActionBar().setTitle(activityTitles[navItemIndex]);
+        //activityTitles[navItemIndex]
     }
 
 
@@ -416,7 +376,6 @@ public class MainActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
     }
-
 
 
 }
