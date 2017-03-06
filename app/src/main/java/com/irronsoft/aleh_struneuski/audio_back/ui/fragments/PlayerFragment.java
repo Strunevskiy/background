@@ -70,8 +70,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 
     private PlayerListActivity playerListActivity;
 
-//    private MediaPlayer mMediaPlayer;
-
     private TextView mSelectedTrackTitle;
 
     private ImageView mSelectedTrackImage;
@@ -85,19 +83,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private Track trackOnLoad;
     private int currentTrack;
 
-
-
-
     private SimpleExoPlayer exoPlayer;
-
     private DefaultHttpDataSourceFactory dataSourceFactory;
-
     private ExtractorsFactory extractor;
-
     private MediaSource audioSource;
-
     private CacheDataSourceFactory cacheDataSource;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

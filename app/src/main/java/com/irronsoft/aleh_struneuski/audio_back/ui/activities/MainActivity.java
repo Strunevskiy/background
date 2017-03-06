@@ -19,7 +19,9 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -42,6 +44,7 @@ import com.irronsoft.aleh_struneuski.audio_back.httpclient.services.SoundCloundS
 import com.irronsoft.aleh_struneuski.audio_back.ui.adapters.GridViewAdapter;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.HomeFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.PlayerFragment;
+import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.SearchForTrackFragment;
 import com.irronsoft.aleh_struneuski.audio_back.utils.ResolutionUtils;
 
 import java.util.ArrayList;
@@ -194,9 +197,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
                // PhotosFragment photosFragment = new PhotosFragment();
                // return photosFragment;
             case 2:
-                // movies fragment
-                // MoviesFragment moviesFragment = new MoviesFragment();
-                // return moviesFragment;
+                // search
+                SearchForTrackFragment searchForTrackFragment = new SearchForTrackFragment();
+                return searchForTrackFragment;
             case 3:
                 // notifications fragment
                 // NotificationsFragment notificationsFragment = new NotificationsFragment();
@@ -313,12 +316,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-
         // show menu only when home fragment is selected
         if (navItemIndex == 0) {
             getMenuInflater().inflate(R.menu.main, menu);
         }
-
         // when fragment is notifications, load the menu created for notifications
         if (navItemIndex == 3) {
             getMenuInflater().inflate(R.menu.notifications, menu);
@@ -354,6 +355,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
         return super.onOptionsItemSelected(item);
     }
 
+
     // show or hide the fab
 //    private void toggleFab() {
 //        if (navItemIndex == 0)
@@ -363,7 +365,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
 //    }
 
     private void setToolbarTitle() {
-        //activityTitles[navItemIndex]
+        getSupportActionBar().setTitle(activityTitles[navItemIndex]);
     }
 
 
