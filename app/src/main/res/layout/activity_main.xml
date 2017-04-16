@@ -13,7 +13,6 @@
 
 
         <android.support.design.widget.NavigationView
-            app:itemTextColor="@color/cell"
             android:id="@+id/nav_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -21,9 +20,9 @@
             android:fitsSystemWindows="true"
             android:background="#DEFBF9"
             app:headerLayout="@layout/nav_header_main"
-            app:menu="@menu/activity_main_drawer" />
+            app:menu="@menu/activity_main_drawer"
+            app:itemBackground="@drawable/nav_item_background"
+            app:itemTextColor="@drawable/nav_item_text"/>
+
 
 </android.support.v4.widget.DrawerLayout>
-
-
-

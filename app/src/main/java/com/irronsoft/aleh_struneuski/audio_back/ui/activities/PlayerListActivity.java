@@ -17,7 +17,8 @@ import com.irronsoft.aleh_struneuski.audio_back.R;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
 
 import com.irronsoft.aleh_struneuski.audio_back.ui.adapters.TrackAdapter;
-import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.PlayerFragment;
+import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.components.PlayerFragment;
+import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnTrackListener;
 
 import java.util.Iterator;
 import java.util.List;
@@ -25,7 +26,7 @@ import java.util.List;
 /**
  * Created by alehstruneuski on 6/13/16.
  */
-public class PlayerListActivity extends FragmentActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class PlayerListActivity extends FragmentActivity implements View.OnClickListener, AdapterView.OnItemClickListener, OnTrackListener {
 
     private static final String TAG = PlayerListActivity.class.getSimpleName();
     private List<Track> mListItems;
@@ -156,5 +157,6 @@ public class PlayerListActivity extends FragmentActivity implements View.OnClick
             }
         }
     }
+
 }
 

@@ -1,61 +1,23 @@
 package com.irronsoft.aleh_struneuski.audio_back.ui.activities;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridLayout;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.irronsoft.aleh_struneuski.audio_back.R;
-import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.PlayList;
-import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
-import com.irronsoft.aleh_struneuski.audio_back.httpclient.RestClient;
-import com.irronsoft.aleh_struneuski.audio_back.httpclient.services.SoundCloundService;
-import com.irronsoft.aleh_struneuski.audio_back.ui.adapters.GridViewAdapter;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.HomeFragment;
-import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.PlayerFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.SearchForTrackFragment;
-import com.irronsoft.aleh_struneuski.audio_back.utils.ResolutionUtils;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-
-import static android.view.ViewGroup.*;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.OnHomeFragmentInteractionListener {
 

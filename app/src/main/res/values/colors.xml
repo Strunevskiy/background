@@ -6,4 +6,6 @@
     <color name="cell">#2E2E2E</color>
     <color name="album_title">#4c4c4c</color>
     <color name="white">#FFFFFF</color>
+
+    <color name="item">#DEFBF9</color>
 </resources>
