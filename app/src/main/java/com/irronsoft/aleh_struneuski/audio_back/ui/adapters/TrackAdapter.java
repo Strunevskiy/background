@@ -2,6 +2,7 @@ package com.irronsoft.aleh_struneuski.audio_back.ui.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,8 @@ import com.irronsoft.aleh_struneuski.audio_back.R;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.DownloadingStatus;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
 import com.irronsoft.aleh_struneuski.audio_back.constants.ProjectConstants;
+import com.irronsoft.aleh_struneuski.audio_back.database.dao.TrackDao;
+import com.irronsoft.aleh_struneuski.audio_back.database.dao.impl.TrackDaoImpl;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.tonyodev.fetch.Fetch;
@@ -23,6 +26,8 @@ import com.tonyodev.fetch.request.Request;
 import net.bohush.geometricprogressview.GeometricProgressView;
 import net.bohush.geometricprogressview.TYPE;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,11 +38,13 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
     private Context mContext;
     private List<Track> mTracks;
 
+    private TrackDao trackDao;
     private Fetch fetch;
 
     public TrackAdapter(Context context, List<Track> tracks) {
         mContext = context;
         mTracks = tracks;
+        trackDao = new TrackDaoImpl(context);
         fetch = Fetch.getInstance(context);
         fetch.enableLogging(true);
         fetch.setConcurrentDownloadsLimit(3);
@@ -90,23 +97,34 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
             convertView.setBackgroundColor(Color.parseColor("#373737"));
         }
 
-
         holder.dowloadImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Track track = getItem(position);
                 if (!track.isDowload() && track.getDownloadingStatus() == DownloadingStatus.NOT_DOWNLOADED) {
-                    String url = track.getStreamURL();
-                    String fileName = url.replaceAll("[^a-zA-z0-9]*", "_");
+                    String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
 
-                    Request request = new Request(url + "?client_id=" + ProjectConstants.CLIENT_ID, fileName);
-                    long downloadId = fetch.enqueue(request);
+                    String urlSound = track.getStreamURL() + "?client_id=" + ProjectConstants.CLIENT_ID;
+                    String fileNameSound = urlSound.replaceAll("[^a-zA-z0-9]*", "_");
 
+                    String urlArtworkUrl = track.getArtworkURL();
+                    String fileNameImage = urlArtworkUrl.replaceAll("[^a-zA-z0-9]*", "_");
+
+                    List<Request> requests = new ArrayList<>();
+                    requests.add(new Request(urlSound, dir, fileNameSound));
+                    requests.add(new Request(urlArtworkUrl, dir, fileNameImage));
+
+
+                    List<Long> downloadIds = fetch.enqueue(requests);
+
+                    track.setDowloadIds(downloadIds);
                     track.setDownloadingStatus(DownloadingStatus.IN_PROGRESS);
-                    track.setDowloadId(downloadId);
                     notifyDataSetChanged();
                 } else if (track.isDowload() && track.getDownloadingStatus() == DownloadingStatus.DOWNLOADED) {
-                    fetch.remove(track.getDowloadId());
+                    trackDao.removeRecordByTitle(track.getTitle());
+                    for (Long id : track.getDowloadIds()) {
+                        fetch.remove(id);
+                    }
                     track.setDownloadingStatus(DownloadingStatus.NOT_DOWNLOADED);
                     track.setDowload(false);
                     notifyDataSetChanged();
@@ -120,8 +138,10 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
         String iconUrl = track.getArtworkURL();
         if (null == iconUrl || iconUrl.isEmpty()){
             Picasso.with(mContext).load(R.mipmap.ic_launcher).fit().into(holder.trackImageView);
-        } else {
-            Picasso.with(mContext).load(track.getArtworkURL()).fit().into(holder.trackImageView);
+        } else if (!track.isDowload()) {
+            Picasso.with(mContext).load(iconUrl).fit().into(holder.trackImageView);
+        } else if (track.isDowload()) {
+            Picasso.with(mContext).load(new File(iconUrl)).fit().into(holder.trackImageView);
         }
         return convertView;
     }
@@ -137,19 +157,25 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
     @Override
     public void onUpdate(long id, int status, int progress, long downloadedBytes, long fileSize, int error) {
         if (status == Fetch.STATUS_DONE) {
-            int count = 0;
             for (Track track : mTracks) {
-                count++;
-                if (track.getDowloadId() == id) {
-                    track.setDownloadingStatus(DownloadingStatus.DOWNLOADED);
-                    track.setDowload(true);
+                List<Long> ids = track.getDowloadIds();
+                if (ids.contains(id)) {
+                    boolean isRecord = trackDao.containRecordByTitle(track.getTitle());
+                    if (!isRecord) {
+                        trackDao.insertRecord(track, "", "");
+                    }
+                    String filePath = fetch.get(id).getFilePath();
+                    if (ids.get(0).intValue() == id) {
+                        trackDao.updateSoundDataByStreamUrl(track.getStreamURL(), filePath);
+                        track.setDownloadingStatus(DownloadingStatus.DOWNLOADED);
+                        track.setDowload(true);
+                    } else if (ids.get(1).intValue() == id) {
+                        trackDao.updateSoundDataByStreamUrl(track.getArtworkURL(), filePath);
+                    }
                     notifyDataSetChanged();
                     break;
                 }
             }
-        }
-
-        if (status == Fetch.STATUS_DONE || status == Fetch.STATUS_REMOVED) {
         }
 
     }

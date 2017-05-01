@@ -7,6 +7,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -39,9 +40,12 @@ import com.google.android.exoplayer2.upstream.Allocator;
 import com.google.android.exoplayer2.upstream.DataSource;
 import com.google.android.exoplayer2.upstream.DefaultAllocator;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.DefaultDataSource;
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.upstream.FileDataSource;
+import com.google.android.exoplayer2.upstream.FileDataSourceFactory;
 import com.google.android.exoplayer2.upstream.cache.Cache;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
@@ -126,11 +130,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         Set<String> keys = cache.getKeys();
         TrackSelector trackSelector = new DefaultTrackSelector();
         LoadControl loadControl = new DefaultLoadControl();
-
         exoPlayer = ExoPlayerFactory.newSimpleInstance(getContext().getApplicationContext(), trackSelector, loadControl);
         extractor = new DefaultExtractorsFactory();
         dataSourceFactory = new DefaultHttpDataSourceFactory("Android");
         cacheDataSource = new CacheDataSourceFactory(cache, dataSourceFactory, 0);
+
 
 
         exoPlayer.addListener(new ExoPlayer.EventListener() {
@@ -220,8 +224,13 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             exoPlayer.stop();
         }
 
-        String urlOfTrackStream = track.getStreamURL() + "?client_id=" + ProjectConstants.CLIENT_ID;
-        audioSource = new ExtractorMediaSource(Uri.parse(urlOfTrackStream), cacheDataSource, extractor, null, null);
+        String urlOfTrackStream = null;
+        if (!track.isDowload()) {
+            urlOfTrackStream = track.getStreamURL() + "?client_id=" + ProjectConstants.CLIENT_ID;
+            audioSource = new ExtractorMediaSource(Uri.parse(urlOfTrackStream), cacheDataSource, extractor, null, null);
+        } else {
+            audioSource = new ExtractorMediaSource(Uri.parse(urlOfTrackStream), new FileDataSourceFactory(), extractor , null, null);
+        }
         exoPlayer.prepare(audioSource);
         exoPlayer.setPlayWhenReady(true);
     }

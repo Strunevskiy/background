@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.irronsoft.aleh_struneuski.audio_back.R;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.HomeFragment;
+import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.MyMusicFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.SearchForTrackFragment;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.OnHomeFragmentInteractionListener {
@@ -155,24 +156,15 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
                 HomeFragment homeFragment = new HomeFragment();
                 return homeFragment;
             case 1:
-                // photos
-               // PhotosFragment photosFragment = new PhotosFragment();
-               // return photosFragment;
+                // my music
+                MyMusicFragment myMusicFragment = new MyMusicFragment();
+                return myMusicFragment;
             case 2:
                 // search
                 SearchForTrackFragment searchForTrackFragment = new SearchForTrackFragment();
                 return searchForTrackFragment;
-            case 3:
-                // notifications fragment
-                // NotificationsFragment notificationsFragment = new NotificationsFragment();
-                // return notificationsFragment;
-            case 4:
-                // settings fragment
-                // SettingsFragment settingsFragment = new SettingsFragment();
-                // return settingsFragment;
             default:
-                // return new HomeFragment();
-                return null;
+                return new HomeFragment();
         }
     }
 

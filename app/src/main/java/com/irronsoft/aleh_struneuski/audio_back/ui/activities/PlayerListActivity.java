@@ -16,11 +16,10 @@ import com.irronsoft.aleh_struneuski.audio_back.R;
 
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
 
+import com.irronsoft.aleh_struneuski.audio_back.database.dao.impl.TrackDaoImpl;
 import com.irronsoft.aleh_struneuski.audio_back.ui.adapters.TrackAdapter;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.components.PlayerFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnTrackListener;
-import com.tonyodev.fetch.Fetch;
-import com.tonyodev.fetch.request.Request;
 
 import java.util.Iterator;
 import java.util.List;
@@ -31,11 +30,16 @@ import java.util.List;
 public class PlayerListActivity extends FragmentActivity implements View.OnClickListener, AdapterView.OnItemClickListener, OnTrackListener {
 
     private static final String TAG = PlayerListActivity.class.getSimpleName();
-    private List<Track> mListItems;
-    private TrackAdapter mAdapter;
+
     private ImageView mBackToHome;
 
+    private TrackAdapter mAdapter;
+
     private PlayerFragment playerFragment;
+
+    private TrackDaoImpl trackDao;
+
+    private List<Track> mListItems;
     private boolean isPlayerAttached = false;
 
     @Override
@@ -45,6 +49,10 @@ public class PlayerListActivity extends FragmentActivity implements View.OnClick
 
         mListItems = this.getIntent().getParcelableArrayListExtra("album_track_list");
         doFillter(mListItems);
+
+        trackDao = new TrackDaoImpl(getApplicationContext());
+        trackDao.tagDowloadedTracks(mListItems);
+
         ListView listView = (ListView) findViewById(R.id.track_list_view);
         mAdapter = new TrackAdapter(this, mListItems);
         listView.setAdapter(mAdapter);
