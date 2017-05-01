@@ -12,6 +12,10 @@ import java.io.Serializable;
  */
 public class Track implements Parcelable {
 
+    private long mDowloadId;
+    private boolean isDowload;
+    private DownloadingStatus downloadingStatus = DownloadingStatus.NOT_DOWNLOADED;
+
     @SerializedName("title")
     private String mTitle;
 
@@ -46,6 +50,30 @@ public class Track implements Parcelable {
         }
     };
 
+    public  boolean isDowload() {
+        return isDowload;
+    }
+
+    public void setDowload(boolean isDowloaded) {
+        isDowload = isDowloaded;
+    }
+
+    public long getDowloadId() {
+        return mDowloadId;
+    }
+
+    public void setDowloadId(long dowloadId) {
+        mDowloadId = dowloadId;
+    }
+
+    public DownloadingStatus getDownloadingStatus() {
+        return downloadingStatus;
+    }
+
+    public void setDownloadingStatus(DownloadingStatus downloadingStatus) {
+        this.downloadingStatus = downloadingStatus;
+    }
+
     public String getTitle() {
         return mTitle;
     }
@@ -74,4 +102,5 @@ public class Track implements Parcelable {
         dest.writeString(mStreamURL);
         dest.writeString(mArtworkURL);
     }
+
 }

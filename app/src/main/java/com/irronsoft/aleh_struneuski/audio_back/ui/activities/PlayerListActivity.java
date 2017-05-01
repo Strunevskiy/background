@@ -19,6 +19,8 @@ import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
 import com.irronsoft.aleh_struneuski.audio_back.ui.adapters.TrackAdapter;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.components.PlayerFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnTrackListener;
+import com.tonyodev.fetch.Fetch;
+import com.tonyodev.fetch.request.Request;
 
 import java.util.Iterator;
 import java.util.List;

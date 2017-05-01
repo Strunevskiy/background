@@ -1,10 +1,7 @@
-package com.irronsoft.aleh_struneuski.audio_back.httpclient;
+package com.irronsoft.aleh_struneuski.audio_back.network.httpclient;
 
-import com.google.gson.Gson;
 import com.irronsoft.aleh_struneuski.audio_back.constants.ProjectConstants;
-import com.irronsoft.aleh_struneuski.audio_back.httpclient.services.SoundCloundService;
 
-import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

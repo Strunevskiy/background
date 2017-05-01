@@ -1,24 +1,18 @@
 package com.irronsoft.aleh_struneuski.audio_back.ui.fragments;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.irronsoft.aleh_struneuski.audio_back.R;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.PlayList;
-import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
-import com.irronsoft.aleh_struneuski.audio_back.httpclient.RestClient;
-import com.irronsoft.aleh_struneuski.audio_back.httpclient.services.SoundCloundService;
-import com.irronsoft.aleh_struneuski.audio_back.ui.activities.PlayerListActivity;
+import com.irronsoft.aleh_struneuski.audio_back.network.httpclient.RestClient;
+import com.irronsoft.aleh_struneuski.audio_back.network.httpclient.services.SoundCloundService;
 import com.irronsoft.aleh_struneuski.audio_back.ui.adapters.GridViewAdapter;
 import com.irronsoft.aleh_struneuski.audio_back.utils.ResolutionUtils;
 

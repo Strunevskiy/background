@@ -1,14 +1,12 @@
 package com.irronsoft.aleh_struneuski.audio_back.ui.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,14 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.irronsoft.aleh_struneuski.audio_back.R;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
-import com.irronsoft.aleh_struneuski.audio_back.httpclient.RestClient;
-import com.irronsoft.aleh_struneuski.audio_back.httpclient.services.SoundCloundService;
-import com.irronsoft.aleh_struneuski.audio_back.ui.activities.PlayerListActivity;
+import com.irronsoft.aleh_struneuski.audio_back.network.httpclient.RestClient;
+import com.irronsoft.aleh_struneuski.audio_back.network.httpclient.services.SoundCloundService;
 import com.irronsoft.aleh_struneuski.audio_back.ui.adapters.TrackAdapter;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.components.PlayerFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnTrackListener;
@@ -33,7 +29,6 @@ import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnTrackListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;

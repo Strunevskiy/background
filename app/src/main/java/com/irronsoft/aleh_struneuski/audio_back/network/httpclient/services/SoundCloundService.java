@@ -1,4 +1,4 @@
-package com.irronsoft.aleh_struneuski.audio_back.httpclient.services;
+package com.irronsoft.aleh_struneuski.audio_back.network.httpclient.services;
 
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.PlayList;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
