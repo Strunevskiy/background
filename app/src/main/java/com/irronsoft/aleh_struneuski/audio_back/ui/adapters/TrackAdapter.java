@@ -17,6 +17,8 @@ import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
 import com.irronsoft.aleh_struneuski.audio_back.constants.ProjectConstants;
 import com.irronsoft.aleh_struneuski.audio_back.database.dao.TrackDao;
 import com.irronsoft.aleh_struneuski.audio_back.database.dao.impl.TrackDaoImpl;
+import com.irronsoft.aleh_struneuski.audio_back.ui.activities.PlayerListActivity;
+import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.components.PlayerFragment;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.tonyodev.fetch.Fetch;
@@ -102,18 +104,24 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
             public void onClick(View view) {
                 Track track = getItem(position);
                 if (!track.isDowload() && track.getDownloadingStatus() == DownloadingStatus.NOT_DOWNLOADED) {
+                    List<Request> requests = new ArrayList<>();
+
                     String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
 
-                    String urlSound = track.getStreamURL() + "?client_id=" + ProjectConstants.CLIENT_ID;
-                    String fileNameSound = urlSound.replaceAll("[^a-zA-z0-9]*", "_");
+                    String urlSound = track.getStreamURL();
+                    if (null != urlSound) {
+                        urlSound += "?client_id=" + ProjectConstants.CLIENT_ID;
+                        String fileNameSound = urlSound.replaceAll("[^a-zA-z0-9]*", "_");
+                        Request requestSound = new Request(urlSound, fileNameSound);
+                        requests.add(requestSound);
+                    }
 
                     String urlArtworkUrl = track.getArtworkURL();
-                    String fileNameImage = urlArtworkUrl.replaceAll("[^a-zA-z0-9]*", "_");
-
-                    List<Request> requests = new ArrayList<>();
-                    requests.add(new Request(urlSound, dir, fileNameSound));
-                    requests.add(new Request(urlArtworkUrl, dir, fileNameImage));
-
+                    if (null != urlArtworkUrl) {
+                        String fileNameImage = urlArtworkUrl.replaceAll("[^a-zA-z0-9]*", "_");
+                        Request requestImage = new Request(urlArtworkUrl, fileNameImage);
+                        requests.add(requestImage);
+                    }
 
                     List<Long> downloadIds = fetch.enqueue(requests);
 
@@ -121,12 +129,14 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
                     track.setDownloadingStatus(DownloadingStatus.IN_PROGRESS);
                     notifyDataSetChanged();
                 } else if (track.isDowload() && track.getDownloadingStatus() == DownloadingStatus.DOWNLOADED) {
-                    trackDao.removeRecordByTitle(track.getTitle());
                     for (Long id : track.getDowloadIds()) {
                         fetch.remove(id);
                     }
-                    track.setDownloadingStatus(DownloadingStatus.NOT_DOWNLOADED);
-                    track.setDowload(false);
+                    if (!(mContext instanceof PlayerListActivity)) {
+                        mTracks.remove(position);
+                    }
+
+                    trackDao.removeRecordByTitle(track.getTitle());
                     notifyDataSetChanged();
                 }
             }
@@ -165,14 +175,16 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
                         trackDao.insertRecord(track, "", "");
                     }
                     String filePath = fetch.get(id).getFilePath();
-                    if (ids.get(0).intValue() == id) {
+                    if (ids.get(0).longValue() == id) {
                         trackDao.updateSoundDataByStreamUrl(track.getStreamURL(), filePath);
+                        track.setStreamURL(filePath);
                         track.setDownloadingStatus(DownloadingStatus.DOWNLOADED);
                         track.setDowload(true);
-                    } else if (ids.get(1).intValue() == id) {
-                        trackDao.updateSoundDataByStreamUrl(track.getArtworkURL(), filePath);
+                        notifyDataSetChanged();
+                    } else if (ids.get(1).longValue() == id) {
+                        trackDao.updateImageDataByStreamUrl(track.getStreamURL(), filePath);
+                        track.setArtworkURL(filePath);
                     }
-                    notifyDataSetChanged();
                     break;
                 }
             }

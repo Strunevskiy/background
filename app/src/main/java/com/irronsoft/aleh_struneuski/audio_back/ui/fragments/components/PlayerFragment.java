@@ -63,6 +63,7 @@ import com.irronsoft.aleh_struneuski.audio_back.utils.BlurBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;
@@ -186,7 +187,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void setTrackImageToPlayer(String url) {
+    public void setTrackImageToPlayer(Track track) {
         if (loadtarget == null) loadtarget = new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -203,7 +204,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 
             }
         };
-        Picasso.with(getContext()).load(url).into(loadtarget);
+
+        String iconUrl = track.getArtworkURL();
+        if (null == iconUrl || iconUrl.isEmpty()){
+            Picasso.with(getContext()).load(R.mipmap.ic_launcher).into(loadtarget);
+        } else if (!track.isDowload()) {
+            Picasso.with(getContext()).load(iconUrl).into(loadtarget);
+        } else if (track.isDowload()) {
+            Picasso.with(getContext()).load(new File(iconUrl)).into(loadtarget);
+        }
     }
 
     public void handleLoadedBitmap(Bitmap originalBitmap) {
@@ -218,15 +227,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         mSelectedTrackTitle.setText(track.getTitle());
         mSelectedTrackTitle.setSelected(true);
 
-        setTrackImageToPlayer(track.getArtworkURL());
+        setTrackImageToPlayer(track);
 
         if (exoPlayer.getPlayWhenReady()|| !exoPlayer.getPlayWhenReady()) {
             exoPlayer.stop();
         }
 
-        String urlOfTrackStream = null;
+        String urlOfTrackStream = track.getStreamURL();
         if (!track.isDowload()) {
-            urlOfTrackStream = track.getStreamURL() + "?client_id=" + ProjectConstants.CLIENT_ID;
+            urlOfTrackStream += "?client_id=" + ProjectConstants.CLIENT_ID;
             audioSource = new ExtractorMediaSource(Uri.parse(urlOfTrackStream), cacheDataSource, extractor, null, null);
         } else {
             audioSource = new ExtractorMediaSource(Uri.parse(urlOfTrackStream), new FileDataSourceFactory(), extractor , null, null);

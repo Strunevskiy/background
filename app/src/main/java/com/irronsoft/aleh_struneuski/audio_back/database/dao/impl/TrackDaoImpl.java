@@ -30,11 +30,12 @@ public class TrackDaoImpl implements TrackDao<Track> {
         if (cursor != null && cursor.getCount() > 0) {
             try {
                 while (cursor.moveToNext()) {
-                    Track track = new com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track();
+                    Track track = new Track();
                     track.setTitle(cursor.getString(DatabaseHelper.INDEX_COLUMN_TITLE));
                     track.setStreamURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_SOUND_FILEPATH));
                     track.setArtworkURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_IMAGE_FILEPATH));
                     track.setDownloadingStatus(DownloadingStatus.DOWNLOADED);
+                    track.setDowload(true);
                     tracks.add(track);
                 }
             } finally {
@@ -48,9 +49,11 @@ public class TrackDaoImpl implements TrackDao<Track> {
     public void tagDowloadedTracks(List<Track> tracks) {
         for (Track track: tracks) {
             Cursor cursor = DatabaseHelper.getInstance(context).getByStreamUrl(track.getStreamURL());
-            if (null != cursor && cursor.getCount() > 0) {
+            if (null != cursor && cursor.getCount() > 0 && cursor.moveToFirst()) {
+                track.setStreamURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_SOUND_FILEPATH));
+                track.setArtworkURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_IMAGE_FILEPATH));
                 track.setDownloadingStatus(DownloadingStatus.DOWNLOADED);
-                track.setStreamURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_STREAM_URL));
+                track.setDowload(true);
                 cursor.close();
             }
         }

@@ -6,7 +6,12 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.irronsoft.aleh_struneuski.audio_back.R;
@@ -47,6 +53,9 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
 
     private List<Track> mListItems;
     private TrackAdapter mAdapter;
+
+    private MenuItem searchItem;
+    private SearchView searchView;
 
     private PlayerFragment playerFragment;
     private boolean isPlayerAttached = false;
@@ -102,6 +111,10 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
         return inflater.inflate(R.layout.fragment_search_for_track, container, false);
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -162,14 +175,11 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.search, menu);
+    public void onPrepareOptionsMenu(Menu menu) {
+        searchItem = menu.findItem(R.id.search);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
         searchItem.expandActionView();
-
-        final SearchView searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -201,6 +211,12 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
             }
         });
 
+        super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.search, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

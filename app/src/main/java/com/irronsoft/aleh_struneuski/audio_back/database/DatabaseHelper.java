@@ -77,31 +77,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public synchronized boolean containRecordByTitle(String title) {
+        String[] args = { title };
         boolean found = false;
         try {
-            Cursor cursor = db.rawQuery("SELECT " + COLUMN_ID
-                    + " FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = " + title, null);
+            Cursor cursor = db.rawQuery("SELECT " + COLUMN_ID + " FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = ?", args);
             if(cursor != null && cursor.getCount() > 0) {
                 found = true;
                 cursor.close();
             }
-        }catch (SQLiteException e) {
+        } catch (SQLiteException e) {
             if(loggingEnabled) {
                 e.printStackTrace();
             }
-            found = true;
+            found = false;
         }
         return found;
     }
 
     public  String getInsertStatement(long soundId, String title, String streamUrl, String artworkUrl,
                               String soundPath, String imagePath) {
-        return "INSERT INTO " + TABLE_NAME + " VALUES ( '" + soundId
-                + "', '" + title
-                + "', '" + streamUrl
-                + "', '" + artworkUrl
-                + "', '" + soundPath
-                + "', '" + imagePath + "' )";
+        return "INSERT INTO " + TABLE_NAME +
+                " (" + COLUMN_ID_SOUND + "," + COLUMN_TITLE + "," + COLUMN_STREAM_URL + " , " + COLUMN_ARTWORK_URL + ", " + COLUMN_SOUND_FILEPATH + ", " + COLUMN_IMAGE_FILEPATH + ")" +
+                "VALUES " + "('" + soundId+ "','" + title + "', '" + streamUrl + "', '" + artworkUrl + "', '" + soundPath + "', '" + imagePath + "' )";
     }
 
     public synchronized boolean insert(long soundId, String title, String streamUrl, String artworkUrl, String soundPath, String imagePath) {
@@ -143,12 +140,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public synchronized boolean deleteByTitle(String title) {
+        String[] args = { title };
         boolean removed = false;
-
         try {
             db.beginTransaction();
-            db.execSQL("DELETE FROM " + TABLE_NAME
-                    + " WHERE " + COLUMN_TITLE + " = " + title);
+            db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = ?", args);
             db.setTransactionSuccessful();
         }catch (SQLiteException e) {
             if(loggingEnabled) {
@@ -168,12 +164,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public synchronized boolean deleteByStreamUrl(String streamUrl) {
-        boolean removed = false;
+        String[] args = { streamUrl };
 
+        boolean removed = false;
         try {
             db.beginTransaction();
-            db.execSQL("DELETE FROM " + TABLE_NAME
-                    + " WHERE " + COLUMN_STREAM_URL + " = " + streamUrl);
+            db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_STREAM_URL + " = ?", args);
             db.setTransactionSuccessful();
         }catch (SQLiteException e) {
             if(loggingEnabled) {
@@ -194,8 +190,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public synchronized Cursor getByTitle(String title) {
         try {
-            return db.rawQuery("SELECT * FROM " + TABLE_NAME
-                    + " WHERE " + COLUMN_TITLE + " = " + title, null);
+            String[] args = { title };
+            return db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = ?", args);
         }catch (SQLiteException e) {
 
             if(loggingEnabled) {
@@ -207,8 +203,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public synchronized Cursor getByStreamUrl(String streamUrl) {
         try {
-            return db.rawQuery("SELECT * FROM " + TABLE_NAME
-                    + " WHERE " + COLUMN_STREAM_URL + " = " + streamUrl, null);
+            String[] args = { streamUrl };
+            return db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_STREAM_URL + " = ?", args);
         }catch (SQLiteException e) {
             if(loggingEnabled) {
                 e.printStackTrace();
@@ -230,11 +226,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public synchronized boolean updateImageData(String streamUrl, String imageFilepath) {
+        String[] args = { imageFilepath, streamUrl };
+
         boolean updated = false;
         try {
             db.beginTransaction();
-            db.execSQL("UPDATE " + TABLE_NAME + " SET " + COLUMN_IMAGE_FILEPATH + " = "
-                    + imageFilepath + " WHERE " + COLUMN_STREAM_URL + " = " + streamUrl);
+            db.execSQL("UPDATE " + TABLE_NAME + " SET " + COLUMN_IMAGE_FILEPATH + " = ?" + " WHERE " + COLUMN_STREAM_URL + " = ?", args);
             db.setTransactionSuccessful();
         }catch (SQLiteException e){
             if(loggingEnabled) {
@@ -254,11 +251,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public synchronized boolean updateSoundData(String streamUrl, String soundFilepath) {
+        String[] args = { soundFilepath, streamUrl };
+
         boolean updated = false;
         try {
             db.beginTransaction();
-            db.execSQL("UPDATE " + TABLE_NAME + " SET " + COLUMN_SOUND_FILEPATH + " = "
-                    + soundFilepath + " WHERE " + COLUMN_STREAM_URL + " = " + streamUrl);
+            db.execSQL("UPDATE " + TABLE_NAME + " SET " + COLUMN_SOUND_FILEPATH + " = ?" +" WHERE " + COLUMN_STREAM_URL + " = ?" , args);
 
             db.setTransactionSuccessful();
         }catch (SQLiteException e){
@@ -281,12 +279,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public synchronized boolean removeByTitle(String title) {
-
+        String[] args = { title };
         boolean remove = false;
         try {
             db.beginTransaction();
-            db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = " + title);
-
+            db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = ?", args);
             db.setTransactionSuccessful();
         }catch (SQLiteException e){
 
