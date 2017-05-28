@@ -25,6 +25,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_ARTWORK_URL = "_artwork_url";
     private static final String COLUMN_SOUND_FILEPATH = "_sound_filepath";
     private static final String COLUMN_IMAGE_FILEPATH = "_image_filepath";
+    private static final String COLUMN_ID_SOUND_FILEPATH = "_id_sound_filepath";
+    private static final String COLUMN_ID_IMAGE_FILEPATH = "_id_image_filepath";
+
 
     /*Convenience INDEXES. DO NOT USE for anything else other than extracting
      *from a cursor that has all columns. Helps with
@@ -36,6 +39,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int INDEX_COLUMN_ARTWORK_URL = 4;
     public static final int INDEX_COLUMN_SOUND_FILEPATH = 5;
     public static final int INDEX_COLUMN_IMAGE_FILEPATH = 6;
+    public static final int INDEX_COLUMN_ID_SOUND_FILEPATH = 7;
+    public static final int INDEX_COLUMN_ID_IMAGE_FILEPATH = 8;
+
 
     static final int EMPTY_COLUMN_VALUE = -1;
 
@@ -58,7 +64,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + COLUMN_STREAM_URL + " TEXT NOT NULL, "
                 + COLUMN_ARTWORK_URL + " TEXT NOT NULL, "
                 + COLUMN_SOUND_FILEPATH + " TEXT NOT NULL, "
-                + COLUMN_IMAGE_FILEPATH + " TEXT NOT NULL)");
+                + COLUMN_IMAGE_FILEPATH + " TEXT NOT NULL, "
+                + COLUMN_ID_SOUND_FILEPATH + " INTEGER , "
+                + COLUMN_ID_IMAGE_FILEPATH + " INTEGER)");
     }
 
     @Override
@@ -193,7 +201,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             String[] args = { title };
             return db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = ?", args);
         }catch (SQLiteException e) {
-
             if(loggingEnabled) {
                 e.printStackTrace();
             }
@@ -225,13 +232,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public synchronized boolean updateImageData(String streamUrl, String imageFilepath) {
-        String[] args = { imageFilepath, streamUrl };
+    public synchronized boolean updateImageData(String streamUrl, String imageFilepath, long idImageFilePath) {
+        String[] args = { imageFilepath, String.valueOf(idImageFilePath), streamUrl };
 
         boolean updated = false;
         try {
             db.beginTransaction();
-            db.execSQL("UPDATE " + TABLE_NAME + " SET " + COLUMN_IMAGE_FILEPATH + " = ?" + " WHERE " + COLUMN_STREAM_URL + " = ?", args);
+            db.execSQL("UPDATE " + TABLE_NAME + " SET " + COLUMN_IMAGE_FILEPATH + " = ?" + ", " + COLUMN_ID_IMAGE_FILEPATH + " = ?" + " WHERE " + COLUMN_STREAM_URL + " = ?", args);
             db.setTransactionSuccessful();
         }catch (SQLiteException e){
             if(loggingEnabled) {
@@ -250,13 +257,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return updated;
     }
 
-    public synchronized boolean updateSoundData(String streamUrl, String soundFilepath) {
-        String[] args = { soundFilepath, streamUrl };
+    public synchronized boolean updateSoundData(String streamUrl, String soundFilepath, long idStreamFilePath) {
+        String[] args = { soundFilepath, String.valueOf(idStreamFilePath), streamUrl };
 
         boolean updated = false;
         try {
             db.beginTransaction();
-            db.execSQL("UPDATE " + TABLE_NAME + " SET " + COLUMN_SOUND_FILEPATH + " = ?" +" WHERE " + COLUMN_STREAM_URL + " = ?" , args);
+            db.execSQL("UPDATE " + TABLE_NAME + " SET " + COLUMN_SOUND_FILEPATH + " = ?" + ", " + COLUMN_ID_SOUND_FILEPATH + " = ?"  + " WHERE " + COLUMN_STREAM_URL + " = ?" , args);
 
             db.setTransactionSuccessful();
         }catch (SQLiteException e){

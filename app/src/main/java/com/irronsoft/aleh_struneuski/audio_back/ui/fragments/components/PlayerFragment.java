@@ -206,7 +206,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         };
 
         String iconUrl = track.getArtworkURL();
-        if (null == iconUrl || iconUrl.isEmpty()){
+        if (null == iconUrl || iconUrl.isEmpty() || iconUrl.equals("null")){
             Picasso.with(getContext()).load(R.mipmap.ic_launcher).into(loadtarget);
         } else if (!track.isDowload()) {
             Picasso.with(getContext()).load(iconUrl).into(loadtarget);

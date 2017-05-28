@@ -2,7 +2,6 @@ package com.irronsoft.aleh_struneuski.audio_back.database.dao.impl;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteException;
 
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.DownloadingStatus;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
@@ -15,7 +14,7 @@ import java.util.List;
 /**
  * Created by alehstruneuski on 5/1/17.
  */
-public class TrackDaoImpl implements TrackDao<Track> {
+public class TrackDaoImpl implements TrackDao {
 
     private Context context;
 
@@ -27,21 +26,23 @@ public class TrackDaoImpl implements TrackDao<Track> {
     public List<Track> getTracksFromDataBase() {
         List<Track> tracks = new ArrayList<>();
         Cursor cursor = DatabaseHelper.getInstance(context).get();
-        if (cursor != null && cursor.getCount() > 0) {
             try {
-                while (cursor.moveToNext()) {
-                    Track track = new Track();
-                    track.setTitle(cursor.getString(DatabaseHelper.INDEX_COLUMN_TITLE));
-                    track.setStreamURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_SOUND_FILEPATH));
-                    track.setArtworkURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_IMAGE_FILEPATH));
-                    track.setDownloadingStatus(DownloadingStatus.DOWNLOADED);
-                    track.setDowload(true);
-                    tracks.add(track);
+                if (cursor != null && cursor.getCount() > 0) {
+                    while (cursor.moveToNext()) {
+                        Track track = new Track();
+                        track.getDowloadIds().add(cursor.getLong(DatabaseHelper.INDEX_COLUMN_ID_SOUND_FILEPATH));
+                        track.getDowloadIds().add(cursor.getLong(DatabaseHelper.INDEX_COLUMN_ID_IMAGE_FILEPATH));
+                        track.setTitle(cursor.getString(DatabaseHelper.INDEX_COLUMN_TITLE));
+                        track.setStreamURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_SOUND_FILEPATH));
+                        track.setArtworkURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_IMAGE_FILEPATH));
+                        track.setDownloadingStatus(DownloadingStatus.DOWNLOADED);
+                        track.setDowload(true);
+                        tracks.add(track);
+                    }
                 }
             } finally {
                 cursor.close();
             }
-        }
         return tracks;
     }
 
@@ -49,11 +50,16 @@ public class TrackDaoImpl implements TrackDao<Track> {
     public void tagDowloadedTracks(List<Track> tracks) {
         for (Track track: tracks) {
             Cursor cursor = DatabaseHelper.getInstance(context).getByStreamUrl(track.getStreamURL());
-            if (null != cursor && cursor.getCount() > 0 && cursor.moveToFirst()) {
-                track.setStreamURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_SOUND_FILEPATH));
-                track.setArtworkURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_IMAGE_FILEPATH));
-                track.setDownloadingStatus(DownloadingStatus.DOWNLOADED);
-                track.setDowload(true);
+            try {
+                if (null != cursor && cursor.getCount() > 0 && cursor.moveToFirst()) {
+                    track.getDowloadIds().add(cursor.getLong(DatabaseHelper.INDEX_COLUMN_ID_SOUND_FILEPATH));
+                    track.getDowloadIds().add(cursor.getLong(DatabaseHelper.INDEX_COLUMN_ID_IMAGE_FILEPATH));
+                    track.setStreamURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_SOUND_FILEPATH));
+                    track.setArtworkURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_IMAGE_FILEPATH));
+                    track.setDownloadingStatus(DownloadingStatus.DOWNLOADED);
+                    track.setDowload(true);
+                }
+            } finally {
                 cursor.close();
             }
         }
@@ -72,13 +78,30 @@ public class TrackDaoImpl implements TrackDao<Track> {
     }
 
     @Override
-    public boolean updateSoundDataByStreamUrl(String streamUrl, String filePath) {
-        return DatabaseHelper.getInstance(context).updateSoundData(streamUrl, filePath);
+    public boolean updateSoundDataByStreamUrl(String streamUrl, String filePath, long idStreamFilePath) {
+        return DatabaseHelper.getInstance(context).updateSoundData(streamUrl, filePath, idStreamFilePath);
     }
 
     @Override
-    public boolean updateImageDataByStreamUrl(String streamUrl, String filePath) {
-        return DatabaseHelper.getInstance(context).updateImageData(streamUrl, filePath);
+    public boolean updateImageDataByStreamUrl(String streamUrl, String filePath, long idImageFilePath) {
+        return DatabaseHelper.getInstance(context).updateImageData(streamUrl, filePath, idImageFilePath);
+    }
+
+    @Override
+    public Track getRecordByTitle(String title) {
+        Cursor cursor = DatabaseHelper.getInstance(context).getByTitle(title);
+        try {
+            if (null != cursor && cursor.getCount() > 0 && cursor.moveToFirst()) {
+                Track track = new Track();
+                track.setTitle(cursor.getString(DatabaseHelper.INDEX_COLUMN_TITLE));
+                track.setStreamURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_STREAM_URL));
+                track.setArtworkURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_ARTWORK_URL));
+                return track;
+            }
+        } finally {
+            cursor.close();
+        }
+        return null;
     }
 
 }

@@ -106,8 +106,6 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
                 if (!track.isDowload() && track.getDownloadingStatus() == DownloadingStatus.NOT_DOWNLOADED) {
                     List<Request> requests = new ArrayList<>();
 
-                    String dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath();
-
                     String urlSound = track.getStreamURL();
                     if (null != urlSound) {
                         urlSound += "?client_id=" + ProjectConstants.CLIENT_ID;
@@ -129,13 +127,23 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
                     track.setDownloadingStatus(DownloadingStatus.IN_PROGRESS);
                     notifyDataSetChanged();
                 } else if (track.isDowload() && track.getDownloadingStatus() == DownloadingStatus.DOWNLOADED) {
-                    for (Long id : track.getDowloadIds()) {
-                        fetch.remove(id);
-                    }
                     if (!(mContext instanceof PlayerListActivity)) {
                         mTracks.remove(position);
+                    } else {
+                        Track storedTrack = trackDao.getRecordByTitle(track.getTitle());
+                        track.setStreamURL(storedTrack.getStreamURL());
+                        track.setArtworkURL(storedTrack.getArtworkURL());
+                        track.setDowload(false);
+                        track.setDownloadingStatus(DownloadingStatus.NOT_DOWNLOADED);
                     }
 
+                    for (Long id : track.getDowloadIds()) {
+                        File fileDowloaded = fetch.getDownloadedFile(id);
+                        if (null != fileDowloaded) {
+                            fileDowloaded.delete();
+                        }
+                        fetch.remove(id);
+                    }
                     trackDao.removeRecordByTitle(track.getTitle());
                     notifyDataSetChanged();
                 }
@@ -146,7 +154,7 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
         holder.trackTitleTextView.setText(track.getTitle().split("(-|–)")[1].trim());
 
         String iconUrl = track.getArtworkURL();
-        if (null == iconUrl || iconUrl.isEmpty()){
+        if (null == iconUrl || iconUrl.isEmpty() || iconUrl.equals("null")){
             Picasso.with(mContext).load(R.mipmap.ic_launcher).fit().into(holder.trackImageView);
         } else if (!track.isDowload()) {
             Picasso.with(mContext).load(iconUrl).fit().into(holder.trackImageView);
@@ -174,15 +182,16 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
                     if (!isRecord) {
                         trackDao.insertRecord(track, "", "");
                     }
+
                     String filePath = fetch.get(id).getFilePath();
                     if (ids.get(0).longValue() == id) {
-                        trackDao.updateSoundDataByStreamUrl(track.getStreamURL(), filePath);
+                        trackDao.updateSoundDataByStreamUrl(track.getStreamURL(), filePath, id);
                         track.setStreamURL(filePath);
                         track.setDownloadingStatus(DownloadingStatus.DOWNLOADED);
                         track.setDowload(true);
                         notifyDataSetChanged();
                     } else if (ids.get(1).longValue() == id) {
-                        trackDao.updateImageDataByStreamUrl(track.getStreamURL(), filePath);
+                        trackDao.updateImageDataByStreamUrl(track.getStreamURL(), filePath, id);
                         track.setArtworkURL(filePath);
                     }
                     break;
@@ -191,6 +200,5 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
         }
 
     }
-
 
 }
