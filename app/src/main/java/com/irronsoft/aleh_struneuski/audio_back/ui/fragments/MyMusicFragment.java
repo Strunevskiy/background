@@ -131,8 +131,8 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener, A
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_button:
-                break;
+           // case R.id.back_button:
+            //    break;
             default:
                 break;
         }

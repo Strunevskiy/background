@@ -241,8 +241,8 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_button:
-                break;
+           // case R.id.back_button:
+           //     break;
             default:
                 break;
         }

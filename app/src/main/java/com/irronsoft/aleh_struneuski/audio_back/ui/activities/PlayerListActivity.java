@@ -4,12 +4,19 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.FragmentActivity;
 
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
 import com.irronsoft.aleh_struneuski.audio_back.R;
@@ -27,15 +34,17 @@ import java.util.List;
 /**
  * Created by alehstruneuski on 6/13/16.
  */
-public class PlayerListActivity extends FragmentActivity implements View.OnClickListener, AdapterView.OnItemClickListener, OnTrackListener {
+public class PlayerListActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, OnTrackListener {
 
     private static final String TAG = PlayerListActivity.class.getSimpleName();
 
-    private ImageView mBackToHome;
+
+    private static final String TAG_TRACK_LIST = "Track List";
+
+    private Toolbar toolbar;
+    private PlayerFragment playerFragment;
 
     private TrackAdapter mAdapter;
-
-    private PlayerFragment playerFragment;
 
     private TrackDaoImpl trackDao;
 
@@ -47,6 +56,10 @@ public class PlayerListActivity extends FragmentActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player_list);
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(TAG_TRACK_LIST);
+
         mListItems = this.getIntent().getParcelableArrayListExtra("album_track_list");
         doFillter(mListItems);
 
@@ -57,9 +70,6 @@ public class PlayerListActivity extends FragmentActivity implements View.OnClick
         mAdapter = new TrackAdapter(this, mListItems);
         listView.setAdapter(mAdapter);
         listView.setOnItemClickListener(this);
-
-        mBackToHome = (ImageView) findViewById(R.id.back_button);
-        mBackToHome.setOnClickListener(this);
     }
 
     private void doFillter(List<Track> listOfTrack) {
@@ -98,9 +108,6 @@ public class PlayerListActivity extends FragmentActivity implements View.OnClick
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.back_button:
-                onBackPressed();
-                break;
             default:
                 break;
         }

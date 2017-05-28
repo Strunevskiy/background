@@ -63,6 +63,9 @@
 
     <net.bohush.geometricprogressview.GeometricProgressView
         android:id="@+id/progressView"
+        android:layout_alignEnd="@id/track_meta_data_container"
+        android:layout_alignRight="@+id/track_meta_data_container"
+        android:layout_alignBottom="@+id/track_meta_data_container"
         android:layout_width="35dp"
         android:layout_height="35dp"
         app:gp_type="triangle"

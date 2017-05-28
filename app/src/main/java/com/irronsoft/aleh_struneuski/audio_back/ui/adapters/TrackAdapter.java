@@ -1,11 +1,15 @@
 package com.irronsoft.aleh_struneuski.audio_back.ui.adapters;
 
+import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -88,7 +92,10 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
         }
 
         if (track.isDowload()) {
+            holder.progressView.setVisibility(View.GONE);
+
             holder.dowloadImageView.setBackgroundResource(R.drawable.ic_remove);
+            holder.dowloadImageView.setVisibility(View.VISIBLE);
         } else {
             holder.dowloadImageView.setBackgroundResource(R.drawable.ic_dowload);
         }
@@ -99,11 +106,19 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
             convertView.setBackgroundColor(Color.parseColor("#373737"));
         }
 
+        final View finalConvertView = convertView;
         holder.dowloadImageView.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 Track track = getItem(position);
                 if (!track.isDowload() && track.getDownloadingStatus() == DownloadingStatus.NOT_DOWNLOADED) {
+
+                    GeometricProgressView progressView = (GeometricProgressView) finalConvertView.findViewById(R.id.progressView);
+                    progressView.setVisibility(View.VISIBLE);
+
+                    view.setVisibility(View.GONE);
+
                     List<Request> requests = new ArrayList<>();
 
                     String urlSound = track.getStreamURL();
@@ -115,7 +130,7 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
                     }
 
                     String urlArtworkUrl = track.getArtworkURL();
-                    if (null != urlArtworkUrl) {
+                    if (null != urlArtworkUrl && urlArtworkUrl.startsWith("http")) {
                         String fileNameImage = urlArtworkUrl.replaceAll("[^a-zA-z0-9]*", "_");
                         Request requestImage = new Request(urlArtworkUrl, fileNameImage);
                         requests.add(requestImage);
