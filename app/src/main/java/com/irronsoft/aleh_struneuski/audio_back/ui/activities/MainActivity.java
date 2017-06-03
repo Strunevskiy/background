@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,8 +20,11 @@ import com.irronsoft.aleh_struneuski.audio_back.R;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.HomeFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.MyMusicFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.SearchForTrackFragment;
+import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnTrackListener;
 
-public class MainActivity extends AppCompatActivity implements HomeFragment.OnHomeFragmentInteractionListener {
+import java.util.List;
+
+public class MainActivity extends AppCompatActivity implements HomeFragment.OnHomeFragmentInteractionListener, OnTrackListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -109,6 +113,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
         // if user select the current navigation menu again, don't do anything
         // just close the navigation drawer
         if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
+
             drawerLayout.closeDrawers();
 
             // show or hide the fab button
@@ -290,4 +295,14 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
     }
 
 
+    @Override
+    public void getTrack(int currentTrack, boolean isNext) {
+        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+        for (Fragment fragment : fragmentList) {
+            if (fragment.isVisible() && fragment instanceof OnTrackListener) {
+                ((OnTrackListener) fragment).getTrack(currentTrack, isNext);
+                break;
+            }
+        }
+    }
 }

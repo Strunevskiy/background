@@ -27,6 +27,7 @@ import com.irronsoft.aleh_struneuski.audio_back.database.dao.impl.TrackDaoImpl;
 import com.irronsoft.aleh_struneuski.audio_back.ui.adapters.TrackAdapter;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.components.PlayerFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnTrackListener;
+import com.irronsoft.aleh_struneuski.audio_back.utils.PlayerFragmentUtils;
 
 import java.util.Iterator;
 import java.util.List;
@@ -133,24 +134,10 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
         return bundle;
     }
 
+    @Override
     public void getTrack(int index, boolean isNext) {
         PlayerFragment playerFragment = (PlayerFragment) getSupportFragmentManager().findFragmentById(R.id.player_control_container);
-        if (isNext) {
-            index++;
-            if (index >= mListItems.size()) {
-                playerFragment.handleClickOnTrack(mListItems.get(0), 0);
-            } else {
-                playerFragment.handleClickOnTrack(mListItems.get(index), index);
-            }
-        } else {
-            index--;
-            if (index == -1) {
-                index = mListItems.size() - 1;
-                playerFragment.handleClickOnTrack(mListItems.get(index), index);
-            } else {
-                playerFragment.handleClickOnTrack(mListItems.get(index), index);
-            }
-        }
+        PlayerFragmentUtils.getTrack(playerFragment, mListItems, index, isNext);
     }
 
 }

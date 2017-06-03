@@ -31,6 +31,7 @@ import com.irronsoft.aleh_struneuski.audio_back.network.httpclient.services.Soun
 import com.irronsoft.aleh_struneuski.audio_back.ui.adapters.TrackAdapter;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.components.PlayerFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnTrackListener;
+import com.irronsoft.aleh_struneuski.audio_back.utils.PlayerFragmentUtils;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -41,14 +42,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SearchForTrackFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SearchForTrackFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class SearchForTrackFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, OnTrackListener {
 
     private List<Track> mListItems;
@@ -69,21 +62,9 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
-
     public SearchForTrackFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SearchForTrackFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static SearchForTrackFragment newInstance(String param1, String param2) {
         SearchForTrackFragment fragment = new SearchForTrackFragment();
         Bundle args = new Bundle();
@@ -128,28 +109,17 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
         listView.setOnItemClickListener(this);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        if (null != playerFragment) {
+            playerFragment.onDetach();
+        }
     }
 
     public void onDestroy() {
@@ -157,21 +127,6 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
         if (null != playerFragment) {
             playerFragment.onDestroy();
         }
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
     }
 
     @Override
@@ -241,8 +196,6 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-           // case R.id.back_button:
-           //     break;
             default:
                 break;
         }
@@ -286,24 +239,9 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
         }
     }
 
+    @Override
     public void getTrack(int index, boolean isNext) {
-        PlayerFragment playerFragment = (PlayerFragment) getFragmentManager().findFragmentById(R.id.player_control_container);
-        if (isNext) {
-            index++;
-            if (index >= mListItems.size()) {
-                playerFragment.handleClickOnTrack(mListItems.get(0), 0);
-            } else {
-                playerFragment.handleClickOnTrack(mListItems.get(index), index);
-            }
-        } else {
-            index--;
-            if (index == -1) {
-                index = mListItems.size() - 1;
-                playerFragment.handleClickOnTrack(mListItems.get(index), index);
-            } else {
-                playerFragment.handleClickOnTrack(mListItems.get(index), index);
-            }
-        }
+        PlayerFragmentUtils.getTrack(playerFragment, mListItems, index, isNext);
     }
 
 }

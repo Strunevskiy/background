@@ -90,6 +90,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     private Target loadtarget;
     private Track trackOnLoad;
     private int currentTrack;
+    private boolean isAttachedInitially;
 
     private SimpleExoPlayer exoPlayer;
     private DefaultHttpDataSourceFactory dataSourceFactory;
@@ -136,8 +137,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         dataSourceFactory = new DefaultHttpDataSourceFactory("Android");
         cacheDataSource = new CacheDataSourceFactory(cache, dataSourceFactory, 0);
 
-
-
+        exoPlayer.setPlayWhenReady(true);
         exoPlayer.addListener(new ExoPlayer.EventListener() {
 
             @Override
@@ -155,63 +155,31 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-
                 if (playbackState == ExoPlayer.STATE_ENDED) {
-                    mPlayerControl.setImageResource(R.drawable.ic_play_button);
+                    mPlayerControl.setImageResource(R.drawable.ic_pause);
                     onTrackListener.getTrack(currentTrack, true);
                 }
-
             }
 
             @Override
             public void onPlayerError(ExoPlaybackException error) {
-
             }
 
             @Override
             public void onPositionDiscontinuity() {
-
             }
         });
+
         handleClickOnTrack(trackOnLoad, currentTrack);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        try {
-
-            this.onTrackListener = new SearchForTrackFragment();
-        } catch (ClassCastException e) {
-            throw new ClassCastException(onTrackListener.toString() + " must implement");
-        }
-    }
-
-    public void setTrackImageToPlayer(Track track) {
-        if (loadtarget == null) loadtarget = new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                handleLoadedBitmap(bitmap);
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-        };
-
-        String iconUrl = track.getArtworkURL();
-        if (null == iconUrl || iconUrl.isEmpty() || iconUrl.equals("null")){
-            Picasso.with(getContext()).load(R.mipmap.ic_launcher).into(loadtarget);
-        } else if (!track.isDowload()) {
-            Picasso.with(getContext()).load(iconUrl).into(loadtarget);
-        } else if (track.isDowload()) {
-            Picasso.with(getContext()).load(new File(iconUrl)).into(loadtarget);
+        if (context instanceof OnTrackListener) {
+            onTrackListener = (OnTrackListener) context;
+        } else {
+            throw new ClassCastException(context.toString() + " must implement");
         }
     }
 
@@ -224,14 +192,15 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
 
     public void handleClickOnTrack(Track track, int position) {
         currentTrack = position;
-        mSelectedTrackTitle.setText(track.getTitle());
-        mSelectedTrackTitle.setSelected(true);
-
+        setTrackTitleToPlayer(track);
         setTrackImageToPlayer(track);
 
-        if (exoPlayer.getPlayWhenReady()|| !exoPlayer.getPlayWhenReady()) {
-            exoPlayer.stop();
+        boolean isPlayPreveously = false;
+        if (exoPlayer.getPlayWhenReady()) {
+            isPlayPreveously = true;
         }
+
+        exoPlayer.stop();
 
         String urlOfTrackStream = track.getStreamURL();
         if (!track.isDowload()) {
@@ -241,7 +210,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             audioSource = new ExtractorMediaSource(Uri.parse(urlOfTrackStream), new FileDataSourceFactory(), extractor , null, null);
         }
         exoPlayer.prepare(audioSource);
-        exoPlayer.setPlayWhenReady(true);
+
+        if (isPlayPreveously) {
+            exoPlayer.setPlayWhenReady(true);
+        }
     }
 
     private void togglePlayPause() {
@@ -254,6 +226,19 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             exoPlayer.setPlayWhenReady(true);
             mPlayerControl.setImageResource(R.drawable.ic_pause);
         }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (exoPlayer != null) {
+            if (exoPlayer.getPlayWhenReady()) {
+                exoPlayer.setPlayWhenReady(false);
+            }
+            exoPlayer.release();
+            exoPlayer = null;
+        }
+        onTrackListener = null;
     }
 
     @Override
@@ -285,6 +270,38 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    private void setTrackTitleToPlayer(Track track) {
+        mSelectedTrackTitle.setText(track.getTitle());
+        mSelectedTrackTitle.setSelected(true);
+    }
+
+    private void setTrackImageToPlayer(Track track) {
+        if (loadtarget == null) loadtarget = new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                handleLoadedBitmap(bitmap);
+            }
+
+            @Override
+            public void onBitmapFailed(Drawable errorDrawable) {
+
+            }
+
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+            }
+        };
+
+        String iconUrl = track.getArtworkURL();
+        if (null == iconUrl || iconUrl.isEmpty() || iconUrl.equals("null")){
+            Picasso.with(getContext()).load(R.mipmap.ic_launcher).into(loadtarget);
+        } else if (!track.isDowload()) {
+            Picasso.with(getContext()).load(iconUrl).into(loadtarget);
+        } else if (track.isDowload()) {
+            Picasso.with(getContext()).load(new File(iconUrl)).into(loadtarget);
+        }
+    }
 
 }
 

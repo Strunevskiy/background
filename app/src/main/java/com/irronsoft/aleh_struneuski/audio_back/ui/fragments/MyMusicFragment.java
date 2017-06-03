@@ -18,17 +18,10 @@ import com.irronsoft.aleh_struneuski.audio_back.database.dao.impl.TrackDaoImpl;
 import com.irronsoft.aleh_struneuski.audio_back.ui.adapters.TrackAdapter;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.components.PlayerFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnTrackListener;
+import com.irronsoft.aleh_struneuski.audio_back.utils.PlayerFragmentUtils;
 
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MyMusicFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link MyMusicFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class MyMusicFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, OnTrackListener {
 
     private List<Track> mListItems;
@@ -39,16 +32,14 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener, A
 
     private TrackDaoImpl trackDao;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private OnTrackListener mTrackListener;
+
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    private OnFragmentInteractionListener mListener;
 
     public MyMusicFragment() {
     }
@@ -83,16 +74,9 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener, A
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+                             Bundle savedInstanceState)
+    {
         return inflater.inflate(R.layout.fragment_my_music, container, false);
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
     }
 
     @Override
@@ -114,25 +98,27 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener, A
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        if (null != playerFragment) {
+            playerFragment.onDetach();
+        }
+    }
+
+    @Override
+    public  void onDestroy() {
+        super.onDestroy();
+        if (null != playerFragment) {
+            playerFragment.onDestroy();
+        }
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-           // case R.id.back_button:
-            //    break;
             default:
                 break;
         }
@@ -152,30 +138,15 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener, A
         }
     }
 
-    @Override
-    public void getTrack(int currentTrack, boolean isNext) {
-
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
     private Bundle put(String key, Parcelable value){
         Bundle bundle = new Bundle();
         bundle.putParcelable(key, value);
         return bundle;
+    }
+
+    @Override
+    public void getTrack(int currentTrack, boolean isNext) {
+        PlayerFragmentUtils.getTrack(playerFragment, mListItems, currentTrack, isNext);
     }
 
 }
