@@ -2,6 +2,7 @@ package com.irronsoft.aleh_struneuski.audio_back.database.dao.impl;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.DownloadingStatus;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
@@ -66,11 +67,13 @@ public class TrackDaoImpl implements TrackDao {
     }
 
     public boolean removeRecordByTitle(String title) {
-        return DatabaseHelper.getInstance(context).removeByTitle(title);
+        String escapeTitle = DatabaseUtils.sqlEscapeString(title);
+        return DatabaseHelper.getInstance(context).removeByTitle(escapeTitle);
     }
 
     public boolean containRecordByTitle(String title) {
-        return DatabaseHelper.getInstance(context).containRecordByTitle(title);
+        String escapeTitle = DatabaseUtils.sqlEscapeString(title);
+        return DatabaseHelper.getInstance(context).containRecordByTitle(escapeTitle);
     }
 
     public boolean insertRecord(Track track, String soundFilePath, String imageFilePath) {
@@ -89,7 +92,8 @@ public class TrackDaoImpl implements TrackDao {
 
     @Override
     public Track getRecordByTitle(String title) {
-        Cursor cursor = DatabaseHelper.getInstance(context).getByTitle(title);
+        String escapeTitle = DatabaseUtils.sqlEscapeString(title);
+        Cursor cursor = DatabaseHelper.getInstance(context).getByTitle(escapeTitle);
         try {
             if (null != cursor && cursor.getCount() > 0 && cursor.moveToFirst()) {
                 Track track = new Track();

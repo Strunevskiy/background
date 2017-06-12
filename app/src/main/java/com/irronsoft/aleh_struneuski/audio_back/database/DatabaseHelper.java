@@ -2,9 +2,11 @@ package com.irronsoft.aleh_struneuski.audio_back.database;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -85,11 +87,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public synchronized boolean containRecordByTitle(String title) {
-        String[] args = { title };
         boolean found = false;
         try {
-            Cursor cursor = db.rawQuery("SELECT " + COLUMN_ID + " FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = ?", args);
-            if(cursor != null && cursor.getCount() > 0) {
+            Cursor cursor = db.rawQuery("SELECT " + COLUMN_ID + " FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = " + title , null);
+            if (cursor != null && cursor.getCount() > 0) {
                 found = true;
                 cursor.close();
             }
@@ -102,16 +103,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return found;
     }
 
-    public  String getInsertStatement(long soundId, String title, String streamUrl, String artworkUrl,
-                              String soundPath, String imagePath) {
+    public String getInsertStatement(long soundId, String title, String streamUrl, String artworkUrl,
+                              String soundPath, String imagePath)
+    {
         return "INSERT INTO " + TABLE_NAME +
                 " (" + COLUMN_ID_SOUND + "," + COLUMN_TITLE + "," + COLUMN_STREAM_URL + " , " + COLUMN_ARTWORK_URL + ", " + COLUMN_SOUND_FILEPATH + ", " + COLUMN_IMAGE_FILEPATH + ")" +
-                "VALUES " + "('" + soundId+ "','" + title + "', '" + streamUrl + "', '" + artworkUrl + "', '" + soundPath + "', '" + imagePath + "' )";
+                "VALUES " + "('" + soundId+ "'," + DatabaseUtils.sqlEscapeString(title) + ", '" + streamUrl + "', '" + artworkUrl + "', '" + soundPath + "', '" + imagePath + "' )";
     }
 
     public synchronized boolean insert(long soundId, String title, String streamUrl, String artworkUrl, String soundPath, String imagePath) {
-
-        String statement = getInsertStatement(soundId, title,streamUrl, artworkUrl, soundPath,imagePath);
+        String statement = getInsertStatement(soundId, title, streamUrl, artworkUrl, soundPath, imagePath);
 
         List<String> insertStatements = new ArrayList<>(1);
         insertStatements.add(statement);
@@ -121,7 +122,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public synchronized boolean insert(List<String> statements) {
         boolean inserted = false;
-        if(statements == null) {
+        if (statements == null) {
             return inserted;
         }
         try {
@@ -131,7 +132,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
             db.setTransactionSuccessful();
         }catch (Exception e) {
-            if(loggingEnabled) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
         }
@@ -198,8 +199,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public synchronized Cursor getByTitle(String title) {
         try {
-            String[] args = { title };
-            return db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = ?", args);
+            return db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = " + title, null);
         }catch (SQLiteException e) {
             if(loggingEnabled) {
                 e.printStackTrace();
@@ -286,15 +286,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public synchronized boolean removeByTitle(String title) {
-        String[] args = { title };
         boolean remove = false;
         try {
             db.beginTransaction();
-            db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = ?", args);
+            db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = " + title);
             db.setTransactionSuccessful();
         }catch (SQLiteException e){
 
-            if(loggingEnabled) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
         }
@@ -302,7 +301,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             db.endTransaction();
             remove = true;
-        }catch (SQLiteException e) {
+        } catch (SQLiteException e) {
 
             if(loggingEnabled) {
                 e.printStackTrace();

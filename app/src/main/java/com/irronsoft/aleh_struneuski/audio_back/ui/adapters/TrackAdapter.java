@@ -1,8 +1,8 @@
 package com.irronsoft.aleh_struneuski.audio_back.ui.adapters;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.database.DatabaseUtils;
 import android.graphics.Color;
 import android.os.Environment;
 import android.util.Log;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -23,7 +24,6 @@ import com.irronsoft.aleh_struneuski.audio_back.database.dao.TrackDao;
 import com.irronsoft.aleh_struneuski.audio_back.database.dao.impl.TrackDaoImpl;
 import com.irronsoft.aleh_struneuski.audio_back.ui.activities.PlayerListActivity;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.components.PlayerFragment;
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.tonyodev.fetch.Fetch;
 import com.tonyodev.fetch.listener.FetchListener;
@@ -34,6 +34,7 @@ import net.bohush.geometricprogressview.TYPE;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -53,7 +54,7 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
         trackDao = new TrackDaoImpl(context);
         fetch = Fetch.getInstance(context);
         fetch.enableLogging(true);
-        fetch.setConcurrentDownloadsLimit(3);
+        fetch.setConcurrentDownloadsLimit(4);
         fetch.addFetchListener(this);
     }
 
@@ -73,9 +74,9 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
     }
 
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-        Track track = getItem(position);
+        Track trackItem = getItem(position);
 
         ViewHolder holder;
         if (convertView == null) {
@@ -91,12 +92,16 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        if (track.isDowload()) {
+        if (trackItem.isDowload()) {
             holder.progressView.setVisibility(View.GONE);
-
-            holder.dowloadImageView.setBackgroundResource(R.drawable.ic_remove);
             holder.dowloadImageView.setVisibility(View.VISIBLE);
+            holder.dowloadImageView.setBackgroundResource(R.drawable.ic_remove);
+        } else if (trackItem.getDownloadingStatus() == DownloadingStatus.IN_PROGRESS) {
+            holder.dowloadImageView.setVisibility(View.GONE);
+            holder.progressView.setVisibility(View.VISIBLE);
         } else {
+            holder.progressView.setVisibility(View.GONE);
+            holder.dowloadImageView.setVisibility(View.VISIBLE);
             holder.dowloadImageView.setBackgroundResource(R.drawable.ic_dowload);
         }
 
@@ -106,21 +111,21 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
             convertView.setBackgroundColor(Color.parseColor("#373737"));
         }
 
-        final View finalConvertView = convertView;
+
         holder.dowloadImageView.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
-                Track track = getItem(position);
+                int selectedTrack =  ((ListView) view.getParent().getParent()).getPositionForView(view);
+                Track track = mTracks.get(selectedTrack);
                 if (!track.isDowload() && track.getDownloadingStatus() == DownloadingStatus.NOT_DOWNLOADED) {
 
-                    GeometricProgressView progressView = (GeometricProgressView) finalConvertView.findViewById(R.id.progressView);
-                    progressView.setVisibility(View.VISIBLE);
-
-                    view.setVisibility(View.GONE);
+//                    ViewHolder viewHolder = (ViewHolder) view.getRootView().getTag();
+//                    ListView llist = (ListView) view.getParent().getParent();
+//                    holder.dowloadImageView.setVisibility(View.GONE);
+//                    holder.progressView.setVisibility(View.VISIBLE);
 
                     List<Request> requests = new ArrayList<>();
-
                     String urlSound = track.getStreamURL();
                     if (null != urlSound) {
                         urlSound += "?client_id=" + ProjectConstants.CLIENT_ID;
@@ -143,7 +148,7 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
                     notifyDataSetChanged();
                 } else if (track.isDowload() && track.getDownloadingStatus() == DownloadingStatus.DOWNLOADED) {
                     if (!(mContext instanceof PlayerListActivity)) {
-                        mTracks.remove(position);
+                        mTracks.remove(selectedTrack);
                     } else {
                         Track storedTrack = trackDao.getRecordByTitle(track.getTitle());
                         track.setStreamURL(storedTrack.getStreamURL());
@@ -165,16 +170,18 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
             }
         });
 
-        holder.trackSingerTextView.setText(track.getTitle().split("(-|–)")[0].trim());
-        holder.trackTitleTextView.setText(track.getTitle().split("(-|–)")[1].trim());
+        holder.trackSingerTextView.setText(trackItem.getTitle().split("(-|–)")[0].trim());
+        holder.trackTitleTextView.setText(trackItem.getTitle().split("(-|–)")[1].trim());
 
-        String iconUrl = track.getArtworkURL();
-        if (null == iconUrl || iconUrl.isEmpty() || iconUrl.equals("null")){
-            Picasso.with(mContext).load(R.mipmap.ic_launcher).fit().into(holder.trackImageView);
-        } else if (!track.isDowload()) {
-            Picasso.with(mContext).load(iconUrl).fit().into(holder.trackImageView);
-        } else if (track.isDowload()) {
-            Picasso.with(mContext).load(new File(iconUrl)).fit().into(holder.trackImageView);
+        if (trackItem.getDownloadingStatus() != DownloadingStatus.IN_PROGRESS) {
+            String iconUrl = trackItem.getArtworkURL();
+            if (null == iconUrl || iconUrl.isEmpty() || iconUrl.equals("null")){
+                Picasso.with(mContext).load(R.mipmap.ic_launcher).fit().into(holder.trackImageView);
+            } else if (iconUrl.startsWith("http")) {
+                Picasso.with(mContext).load(iconUrl).fit().into(holder.trackImageView);
+            } else if (!iconUrl.startsWith("http")) {
+                Picasso.with(mContext).load(new File(iconUrl)).fit().into(holder.trackImageView);
+            }
         }
         return convertView;
     }
@@ -197,7 +204,6 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
                     if (!isRecord) {
                         trackDao.insertRecord(track, "", "");
                     }
-
                     String filePath = fetch.get(id).getFilePath();
                     if (ids.get(0).longValue() == id) {
                         trackDao.updateSoundDataByStreamUrl(track.getStreamURL(), filePath, id);
@@ -212,8 +218,28 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
                     break;
                 }
             }
-        }
+        } else if (status == Fetch.STATUS_ERROR) {
+            for (Track track : mTracks) {
+                List<Long> ids = track.getDowloadIds();
+                if (null != ids && !ids.isEmpty() && ids.contains(id)) {
+                    for (Long idTrack : ids) {
+                        File fileDowloaded = fetch.getDownloadedFile(idTrack);
+                        if (null != fileDowloaded) {
+                            fileDowloaded.delete();
+                        }
+                        fetch.remove(idTrack);
+                    }
 
+                    track.setDowloadIds(Collections.EMPTY_LIST);
+                    track.setDowload(false);
+                    track.setDownloadingStatus(DownloadingStatus.NOT_DOWNLOADED);
+
+
+                    trackDao.removeRecordByTitle(track.getTitle());
+                    notifyDataSetChanged();
+                }
+            }
+        }
     }
 
 }
