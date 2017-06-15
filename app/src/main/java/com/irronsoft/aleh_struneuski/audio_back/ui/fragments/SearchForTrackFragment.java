@@ -25,7 +25,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.irronsoft.aleh_struneuski.audio_back.R;
+import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.DownloadingStatus;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
+import com.irronsoft.aleh_struneuski.audio_back.database.dao.impl.TrackDaoImpl;
 import com.irronsoft.aleh_struneuski.audio_back.network.httpclient.RestClient;
 import com.irronsoft.aleh_struneuski.audio_back.network.httpclient.services.SoundCloundService;
 import com.irronsoft.aleh_struneuski.audio_back.ui.adapters.TrackAdapter;
@@ -34,8 +36,10 @@ import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnTrackListener;
 import com.irronsoft.aleh_struneuski.audio_back.utils.PlayerFragmentUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,6 +48,7 @@ import retrofit2.Retrofit;
 
 public class SearchForTrackFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, OnTrackListener {
 
+    private List<Track> listOfTracksFromDataBase;
     private List<Track> mListItems;
     private TrackAdapter mAdapter;
 
@@ -52,6 +57,8 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
 
     private PlayerFragment playerFragment;
     private boolean isPlayerAttached = false;
+
+    private TrackDaoImpl trackDao;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -100,6 +107,8 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        trackDao = new TrackDaoImpl(getContext());
 
         mListItems = new ArrayList<>();
         mAdapter = new TrackAdapter(getContext(), mListItems);
@@ -223,9 +232,45 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
 
     private void loadTracks(List<Track> tracks) {
         doFillter(tracks);
+        markLoadedTracks(tracks);
         mListItems.clear();
         mListItems.addAll(tracks);
         mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void getTrack(int index, boolean isNext) {
+        PlayerFragmentUtils.getTrack(playerFragment, mListItems, index, isNext);
+    }
+
+    private void markLoadedTracks(List<Track> listOfTracks) {
+        List<Track> tracksFromDatabase = getTracksFromDataBase();
+
+        Map<String, Track> tracks = new HashMap();
+        for (Track track : tracksFromDatabase) {
+            tracks.put(track.getTitle(), track);
+        }
+
+        for (Track track : listOfTracks) {
+            String title = track.getTitle();
+            if (tracks.containsKey(title)) {
+                Track downloadedTrack = tracks.get(title);
+                track.setDowload(true);
+                track.setDownloadingStatus(DownloadingStatus.DOWNLOADED);
+                track.setTitle(downloadedTrack.getTitle());
+                track.setStreamURL(downloadedTrack.getStreamURL());
+                track.setArtworkURL(downloadedTrack.getArtworkURL());
+                track.setID(downloadedTrack.getID());
+                track.setDowloadIds(downloadedTrack.getDowloadIds());
+            }
+        }
+    }
+
+    public List<Track> getTracksFromDataBase() {
+        if (null == listOfTracksFromDataBase) {
+            listOfTracksFromDataBase = trackDao.getTracksFromDataBase();
+        }
+        return listOfTracksFromDataBase;
     }
 
     private void doFillter(List<Track> listOfTrack) {
@@ -237,11 +282,6 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
                 tracks.remove();
             }
         }
-    }
-
-    @Override
-    public void getTrack(int index, boolean isNext) {
-        PlayerFragmentUtils.getTrack(playerFragment, mListItems, index, isNext);
     }
 
 }
