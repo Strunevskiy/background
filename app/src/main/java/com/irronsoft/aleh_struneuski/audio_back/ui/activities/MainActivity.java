@@ -1,5 +1,8 @@
 package com.irronsoft.aleh_struneuski.audio_back.ui.activities;
 
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -63,6 +66,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
 
         drawerLayout = (DrawerLayout) findViewById(R.id.main_content);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        //navigationView.getMenu().getItem(1).setEnabled(false);
+        //navigationView.getMenu().getItem(1).getIcon().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
 
 /////        fab = (FloatingActionButton) findViewById(R.id.fab);
 
@@ -199,28 +205,26 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
                         navItemIndex = 2;
                         CURRENT_TAG = TAG_SEARCH_FOR_TRACK;
                         break;
-                    //case R.id.nav_about_us:
+                    case R.id.setting:
                         // launch new intent instead of loading fragment
                         // startActivity(new Intent(MainActivity.this, MainActivity.class));
                      //   drawer.closeDrawers();
                      //   return true;
-                    //case R.id.nav_privacy_policy:
-                        // launch new intent instead of loading fragment
-                       //  startActivity(new Intent(MainActivity.this, PrivacyPolicyActivity.class));
-                      //  drawer.closeDrawers();
-                      //  return true;
+                    case R.id.share_app:
+                        String shareSubText = "Background - The Great Music App";
+                        String shareBodyTextPattern = "https://play.google.com/store/apps/details?id=%s";
+                        String shareBodyText = String.format(shareBodyTextPattern, getPackageName());
+
+                        Intent intent = new Intent(Intent.ACTION_SEND);
+                        intent.setType("text/plain");
+                        intent.putExtra(Intent.EXTRA_SUBJECT, shareSubText);
+                        intent.putExtra(Intent.EXTRA_TEXT, shareBodyText);
+                        startActivity(Intent.createChooser(intent, "Share"));
+                        drawerLayout.closeDrawers();
+                        return true;
                     default:
                         navItemIndex = 0;
                 }
-
-                //Checking if the item is in checked state or not, if not make it in checked state
-                if (menuItem.isChecked()) {
-                    menuItem.setChecked(false);
-                } else {
-                    menuItem.setChecked(true);
-                }
-                menuItem.setChecked(true);
-
                 loadHomeFragment();
 
                 return true;
@@ -238,9 +242,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
             public void onDrawerOpened(View drawerView) {
                 // Code here will be triggered once the drawer open as we dont want anything to happen so we leave this blank
                 super.onDrawerOpened(drawerView);
+                selectNavMenu();
             }
         };
-        actionBarDrawerToggle.setDrawerIndicatorEnabled(false);
+        actionBarDrawerToggle.setDrawerIndicatorEnabled(true);
 
         //Setting the actionbarToggle to drawer layout
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
