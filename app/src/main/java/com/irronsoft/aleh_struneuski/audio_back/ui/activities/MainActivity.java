@@ -1,11 +1,16 @@
 package com.irronsoft.aleh_struneuski.audio_back.ui.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -25,6 +30,7 @@ import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.MyMusicFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.SearchForTrackFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnTrackListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements HomeFragment.OnHomeFragmentInteractionListener, OnTrackListener {
@@ -99,6 +105,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
             CURRENT_TAG = TAG_HOME;
             loadHomeFragment();
         }
+
+        //ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.PROCESS_OUTGOING_CALLS}, 33);
     }
 
     private void loadNavHeader() {

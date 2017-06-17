@@ -1,23 +1,24 @@
 package com.irronsoft.aleh_struneuski.audio_back.ui.fragments.components;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.telecom.TelecomManager;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -25,58 +26,48 @@ import com.google.android.exoplayer2.ExoPlayerFactory;
 import com.google.android.exoplayer2.LoadControl;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
-import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource;
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory;
 import com.google.android.exoplayer2.extractor.ExtractorsFactory;
 import com.google.android.exoplayer2.source.ExtractorMediaSource;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.trackselection.AdaptiveVideoTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.upstream.Allocator;
-import com.google.android.exoplayer2.upstream.DataSource;
-import com.google.android.exoplayer2.upstream.DefaultAllocator;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
-import com.google.android.exoplayer2.upstream.DefaultDataSource;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
-import com.google.android.exoplayer2.upstream.FileDataSource;
 import com.google.android.exoplayer2.upstream.FileDataSourceFactory;
 import com.google.android.exoplayer2.upstream.cache.Cache;
-import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
-import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
-import com.google.android.exoplayer2.util.Util;
 import com.irronsoft.aleh_struneuski.audio_back.R;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
+import com.irronsoft.aleh_struneuski.audio_back.broadcast.call.AbstractCallReceiver;
+import com.irronsoft.aleh_struneuski.audio_back.broadcast.call.CallReceiver;
+import com.irronsoft.aleh_struneuski.audio_back.broadcast.headset.HeadsetReceiver;
 import com.irronsoft.aleh_struneuski.audio_back.constants.ProjectConstants;
-import com.irronsoft.aleh_struneuski.audio_back.ui.activities.PlayerListActivity;
-import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.SearchForTrackFragment;
+import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnPlayerControlListener;
 import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnTrackListener;
 import com.irronsoft.aleh_struneuski.audio_back.utils.BlurBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
-
-
-import static android.media.MediaPlayer.*;
 
 /**
  * Created by alehstruneuski on 11/25/16.
  */
-public class PlayerFragment extends Fragment implements View.OnClickListener {
+public class PlayerFragment extends Fragment implements View.OnClickListener, OnPlayerControlListener {
 
-    private OnTrackListener onTrackListener;
+    private Context mContext;
+
+    private AbstractCallReceiver mCallReceiver;
+    private HeadsetReceiver mHeadsetReceiver;
+
+    private OnTrackListener mOnTrackListener;
 
     private TextView mSelectedTrackTitle;
 
@@ -157,7 +148,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 if (playbackState == ExoPlayer.STATE_ENDED) {
                     mPlayerControl.setImageResource(R.drawable.ic_pause);
-                    onTrackListener.getTrack(currentTrack, true);
+                    mOnTrackListener.getTrack(currentTrack, true);
                 }
             }
 
@@ -169,15 +160,26 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             public void onPositionDiscontinuity() {
             }
         });
-
         handleClickOnTrack(trackOnLoad, currentTrack);
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mContext = context;
+
+        mCallReceiver = new CallReceiver(this);
+        IntentFilter callReceiverFilters = new IntentFilter();
+        callReceiverFilters.addAction(Intent.ACTION_NEW_OUTGOING_CALL);
+        callReceiverFilters.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
+        mContext.registerReceiver(mCallReceiver, callReceiverFilters);
+
+
+        mHeadsetReceiver = new HeadsetReceiver(this);
+        mContext.registerReceiver(mHeadsetReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+
         if (context instanceof OnTrackListener) {
-            onTrackListener = (OnTrackListener) context;
+            mOnTrackListener = (OnTrackListener) context;
         } else {
             throw new ClassCastException(context.toString() + " must implement");
         }
@@ -231,6 +233,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onDetach() {
         super.onDetach();
+
+        mContext.unregisterReceiver(mHeadsetReceiver);
+        mContext.unregisterReceiver(mCallReceiver);
+
         if (exoPlayer != null) {
             if (exoPlayer.getPlayWhenReady()) {
                 exoPlayer.setPlayWhenReady(false);
@@ -238,7 +244,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             exoPlayer.release();
             exoPlayer = null;
         }
-        onTrackListener = null;
+        mOnTrackListener = null;
     }
 
     @Override
@@ -260,10 +266,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
                 togglePlayPause();
                 break;
             case R.id.player_control_next:
-                onTrackListener.getTrack(currentTrack, true);
+                mOnTrackListener.getTrack(currentTrack, true);
                 break;
             case R.id.player_control_prev:
-                onTrackListener.getTrack(currentTrack, false);
+                mOnTrackListener.getTrack(currentTrack, false);
                 break;
             default:
                 break;
@@ -302,6 +308,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener {
             Picasso.with(getContext()).load(new File(iconUrl)).into(loadtarget);
         }
     }
+
+    @Override
+    public boolean isPlayingPlayer() {
+        return exoPlayer.getPlayWhenReady();
+    }
+
+    @Override
+    public void togglePlayPausePlayer() {
+        togglePlayPause();
+    }
+
 
 }
 
