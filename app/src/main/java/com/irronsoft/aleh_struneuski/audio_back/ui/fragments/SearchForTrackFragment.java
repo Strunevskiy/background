@@ -131,7 +131,8 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
         }
     }
 
-    public void onDestroy() {
+    @Override
+    public  void onDestroy() {
         super.onDestroy();
         if (null != playerFragment) {
             playerFragment.onDestroy();

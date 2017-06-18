@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.LocalBroadcastManager;
 import android.telecom.TelecomManager;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
@@ -172,11 +173,10 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, On
         IntentFilter callReceiverFilters = new IntentFilter();
         callReceiverFilters.addAction(Intent.ACTION_NEW_OUTGOING_CALL);
         callReceiverFilters.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
-        mContext.registerReceiver(mCallReceiver, callReceiverFilters);
-
+        getActivity().registerReceiver(mCallReceiver, callReceiverFilters);
 
         mHeadsetReceiver = new HeadsetReceiver(this);
-        mContext.registerReceiver(mHeadsetReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
+        getActivity().registerReceiver(mHeadsetReceiver, new IntentFilter(Intent.ACTION_HEADSET_PLUG));
 
         if (context instanceof OnTrackListener) {
             mOnTrackListener = (OnTrackListener) context;
@@ -233,18 +233,14 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, On
     @Override
     public void onDetach() {
         super.onDetach();
+    }
 
-        mContext.unregisterReceiver(mHeadsetReceiver);
-        mContext.unregisterReceiver(mCallReceiver);
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
 
-        if (exoPlayer != null) {
-            if (exoPlayer.getPlayWhenReady()) {
-                exoPlayer.setPlayWhenReady(false);
-            }
-            exoPlayer.release();
-            exoPlayer = null;
-        }
-        mOnTrackListener = null;
+        getActivity().unregisterReceiver(mHeadsetReceiver);
+        getActivity().unregisterReceiver(mCallReceiver);
     }
 
     @Override
@@ -257,6 +253,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, On
             exoPlayer.release();
             exoPlayer = null;
         }
+        mOnTrackListener = null;
     }
 
     @Override

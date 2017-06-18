@@ -12,6 +12,8 @@ public class CallReceiver extends AbstractCallReceiver {
 
     private OnPlayerControlListener onPlayerControlListener;
 
+    private boolean isPlayingBeforeStopping;
+
     public CallReceiver() {}
 
     public CallReceiver(OnPlayerControlListener onPlayerControlListener) {
@@ -20,32 +22,36 @@ public class CallReceiver extends AbstractCallReceiver {
 
     @Override
     protected void onIncomingCallReceived(Context ctx) {
-        if (onPlayerControlListener.isPlayingPlayer())  {
+        isPlayingBeforeStopping = onPlayerControlListener.isPlayingPlayer();
+        if (isPlayingBeforeStopping)  {
             onPlayerControlListener.togglePlayPausePlayer();
         }
     }
 
     @Override
     protected void onIncomingCallAnswered(Context ctx) {
-        if (onPlayerControlListener.isPlayingPlayer())  {
+    }
+
+    @Override
+    protected void onIncomingCallEnded(Context ctx) {
+        if (isPlayingBeforeStopping) {
             onPlayerControlListener.togglePlayPausePlayer();
         }
     }
 
     @Override
-    protected void onIncomingCallEnded(Context ctx) {
-    }
-
-    @Override
     protected void onOutgoingCallStarted(Context ctx) {
-        if (onPlayerControlListener.isPlayingPlayer())  {
+        isPlayingBeforeStopping = onPlayerControlListener.isPlayingPlayer();
+        if (isPlayingBeforeStopping)  {
             onPlayerControlListener.togglePlayPausePlayer();
         }
     }
 
     @Override
     protected void onOutgoingCallEnded(Context ctx) {
-
+        if (isPlayingBeforeStopping) {
+            onPlayerControlListener.togglePlayPausePlayer();
+        }
     }
 
     @Override
