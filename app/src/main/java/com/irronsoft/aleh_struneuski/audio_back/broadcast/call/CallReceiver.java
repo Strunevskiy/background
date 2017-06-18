@@ -56,7 +56,9 @@ public class CallReceiver extends AbstractCallReceiver {
 
     @Override
     protected void onMissedCall(Context ctx) {
-
+        if (isPlayingBeforeStopping) {
+            onPlayerControlListener.togglePlayPausePlayer();
+        }
     }
 
 }
