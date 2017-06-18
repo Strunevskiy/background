@@ -1,10 +1,14 @@
 package com.irronsoft.aleh_struneuski.audio_back.ui.adapters;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.database.DatabaseUtils;
 import android.graphics.Color;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -238,6 +242,10 @@ public class TrackAdapter extends BaseAdapter implements FetchListener {
                     trackDao.removeRecordByTitle(track.getTitle());
                     notifyDataSetChanged();
                 }
+            }
+
+            if (ContextCompat.checkSelfPermission(mContext, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions((Activity) mContext, new String[]{ Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE }, 1);
             }
         }
     }
