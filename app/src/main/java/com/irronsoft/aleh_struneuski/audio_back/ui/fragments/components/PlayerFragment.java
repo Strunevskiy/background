@@ -14,9 +14,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telecom.TelecomManager;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -187,9 +189,17 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, On
 
     public void handleLoadedBitmap(Bitmap originalBitmap) {
         mSelectedTrackImage.setImageBitmap(originalBitmap);
-        Bitmap blurredBitmap = BlurBuilder.blur(getContext(), originalBitmap);
-        Bitmap scalabelBluredBitmap = Bitmap.createScaledBitmap(blurredBitmap, mBlurePlayer.getWidth(), mBlurePlayer.getHeight(), false);
-        mBlurePlayer.setImageBitmap(scalabelBluredBitmap);
+        final Bitmap blurredBitmap = BlurBuilder.blur(getContext(), originalBitmap);
+        // It is the fix of the error width and height must be > 0
+        ViewTreeObserver vto = mBlurePlayer.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                mBlurePlayer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                Bitmap scalabelBluredBitmap = Bitmap.createScaledBitmap(blurredBitmap, mBlurePlayer.getWidth(), mBlurePlayer.getHeight(), false);
+                mBlurePlayer.setImageBitmap(scalabelBluredBitmap);
+            }
+        });
     }
 
     public void handleClickOnTrack(Track track, int position) {
@@ -280,6 +290,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, On
 
     private void setTrackImageToPlayer(Track track) {
         if (loadtarget == null) loadtarget = new Target() {
+
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 handleLoadedBitmap(bitmap);

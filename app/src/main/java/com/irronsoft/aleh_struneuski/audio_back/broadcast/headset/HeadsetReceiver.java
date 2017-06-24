@@ -15,6 +15,8 @@ public class HeadsetReceiver extends BroadcastReceiver {
 
     private OnPlayerControlListener onPlayerControlListener;
 
+    private boolean headsetConnected = false;
+
     public HeadsetReceiver() {}
 
     public HeadsetReceiver(OnPlayerControlListener onPlayerControlListener) {
@@ -23,13 +25,15 @@ public class HeadsetReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        int state = intent.getIntExtra("state", -1);
-        switch (state) {
-            case 0:
+        if (intent.hasExtra("state")) {
+            if (headsetConnected && intent.getIntExtra("state", 0) == 0) {
+                headsetConnected = false;
                 if (onPlayerControlListener.isPlayingPlayer()) {
                     onPlayerControlListener.togglePlayPausePlayer();
                 }
-                break;
+            } else if (!headsetConnected && intent.getIntExtra("state", 0) == 1){
+                headsetConnected = true;
+            }
         }
     }
 }
