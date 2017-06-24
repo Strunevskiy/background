@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,6 +35,7 @@ import com.irronsoft.aleh_struneuski.audio_back.ui.adapters.TrackAdapter;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.components.PlayerFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnTrackListener;
 import com.irronsoft.aleh_struneuski.audio_back.utils.PlayerFragmentUtils;
+import com.irronsoft.aleh_struneuski.audio_back.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -190,7 +192,11 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
         Retrofit retrofitClient = restClient.getRetrofitClient();
         SoundCloundService soundCloundService = retrofitClient.create(SoundCloundService.class);
 
-        Call<List<Track>> playList = soundCloundService.getTracksByQuery(query);
+        String[] limits = getResources().getStringArray(R.array.limits);
+        int index = PreferenceUtils.getLimit(this.getContext());
+        String numberOfTracks = limits[index];
+
+        Call<List<Track>> playList = soundCloundService.getTracksByQuery(numberOfTracks, query);
         playList.enqueue(new Callback<List<Track>>() {
             @Override
             public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {

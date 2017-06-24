@@ -27,6 +27,7 @@ import com.irronsoft.aleh_struneuski.audio_back.R;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.HomeFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.MyMusicFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.SearchForTrackFragment;
+import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.SettingsFragment;
 import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnTrackListener;
 
 import java.util.List;
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
     private static final String TAG_HOME = "Background";
     private static final String TAG_MY_MUSIC = "My Music";
     private static final String TAG_SEARCH_FOR_TRACK = "Search";
+    private static final String TAG_SETTINGS = "Settings";
+
     public static String CURRENT_TAG = TAG_HOME;
 
     // toolbar titles respected to selected nav menu item
@@ -139,8 +142,6 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
                 // update the main content by replacing fragments
                 Fragment fragment = getHomeFragment();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
-                        android.R.anim.fade_out);
                 fragmentTransaction.replace(R.id.frame, fragment, CURRENT_TAG);
                 fragmentTransaction.commitAllowingStateLoss();
             }
@@ -175,6 +176,10 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
                 // search
                 SearchForTrackFragment searchForTrackFragment = new SearchForTrackFragment();
                 return searchForTrackFragment;
+            case 3:
+                // search
+                SettingsFragment settingsFragment = new SettingsFragment();
+                return settingsFragment;
             default:
                 return new HomeFragment();
         }
@@ -207,10 +212,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
                         CURRENT_TAG = TAG_SEARCH_FOR_TRACK;
                         break;
                     case R.id.setting:
-                        // launch new intent instead of loading fragment
-                        // startActivity(new Intent(MainActivity.this, MainActivity.class));
-                     //   drawer.closeDrawers();
-                     //   return true;
+                        navItemIndex = 3;
+                        CURRENT_TAG = TAG_SETTINGS;
+                        break;
                     case R.id.share_app:
                         String shareSubText = "Background - The Great Music App";
                         String shareBodyTextPattern = "https://play.google.com/store/apps/details?id=%s";

@@ -2,6 +2,13 @@ package com.irronsoft.aleh_struneuski.audio_back;
 
 import android.app.Application;
 import android.content.ContentResolver;
+import android.support.v4.view.ViewCompat;
+import android.util.TypedValue;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.PlayList;
 import com.irronsoft.aleh_struneuski.audio_back.network.httpclient.RestClient;
@@ -52,6 +59,20 @@ public class Background extends Application {
 
     public List<PlayList> getPlayList() {
         return mPlayLists;
+    }
+
+    public void showToast(String message) {
+        Toast toast = new Toast(this);
+
+        View snackbar = LayoutInflater.from(this).inflate(R.layout.snackbar_layout, null);
+        ((TextView) snackbar.findViewById(R.id.message)).setText(message);
+        ViewCompat.setElevation(snackbar, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources().getDisplayMetrics()));
+
+        toast.setView(snackbar);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.setMargin(0, 0);
+        toast.setGravity(Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 0);
+        toast.show();
     }
 
 }
