@@ -87,6 +87,9 @@ public class MyMusicFragment extends Fragment implements View.OnClickListener, A
 
         mListItems = trackDao.getTracksFromDataBase();
 
+        View empty = getView().findViewById(R.id.empty);
+        empty.setVisibility(mListItems.size() == 0 ? View.VISIBLE : View.GONE);
+
         mAdapter = new TrackAdapter(getContext(), mListItems);
         ListView listView = (ListView) getView().findViewById(R.id.track_list_view);
         listView.setAdapter(mAdapter);

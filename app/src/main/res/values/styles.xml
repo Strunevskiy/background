@@ -19,4 +19,8 @@
         <item name="color">@android:color/white</item>
     </style>
 
+    <style name="SplashTheme" parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
+
 </resources>

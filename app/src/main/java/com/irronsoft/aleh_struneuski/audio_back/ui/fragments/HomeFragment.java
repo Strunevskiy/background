@@ -86,7 +86,7 @@ public class HomeFragment extends Fragment {
         mGridView.setAdapter(mGridAdapter);
         mGridView.setOnItemClickListener(mGridAdapter);
 
-        setPlayList();
+        getPlayList();
     }
 
     @Override
@@ -112,7 +112,7 @@ public class HomeFragment extends Fragment {
     }
 
 
-    private void setPlayList() {
+    private void getPlayList() {
         RestClient restClient = RestClient.getInstance();
         Retrofit retrofitClient = restClient.getRetrofitClient();
         SoundCloundService soundCloundService = retrofitClient.create(SoundCloundService.class);

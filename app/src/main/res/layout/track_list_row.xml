@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="21dp"
                 android:maxLines="1"
-                android:textColor="#CFCFCF"/>
+                android:textColor="@color/title"/>
 
             <TextView
                 android:id="@+id/track_singer"
@@ -43,7 +43,7 @@
                 android:layout_below="@+id/track_title"
                 android:maxLines="1"
                 android:textSize="18dp"
-                android:textColor="#6C6C6C"/>
+                android:textColor="@color/sub_title"/>
 
         </RelativeLayout>
 
