@@ -11,6 +11,7 @@ import com.afollestad.async.Action;
 import com.afollestad.async.Async;
 import com.afollestad.async.Done;
 import com.afollestad.async.Result;
+import com.irronsoft.aleh_struneuski.audio_back.Background;
 import com.irronsoft.aleh_struneuski.audio_back.R;
 
 /**
@@ -19,11 +20,14 @@ import com.irronsoft.aleh_struneuski.audio_back.R;
 
 public class SplashActivity extends AppCompatActivity {
 
+    private Background mBackground;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        mBackground = (Background) getApplicationContext();
         openRequest();
     }
 
@@ -34,13 +38,14 @@ public class SplashActivity extends AppCompatActivity {
                         @NonNull
                         @Override
                         public String id() {
-                            return "fetch_artists";
+                            return "fetch_playlist";
                         }
 
                         @Nullable
                         @Override
                         protected Object run() throws InterruptedException {
-                            return "tut";
+                            mBackground.setPlayList();
+                            return null;
                         }
                     }
             ).done(new Done() {

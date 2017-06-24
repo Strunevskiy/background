@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
+import com.irronsoft.aleh_struneuski.audio_back.Background;
 import com.irronsoft.aleh_struneuski.audio_back.R;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.PlayList;
 import com.irronsoft.aleh_struneuski.audio_back.network.httpclient.RestClient;
@@ -33,9 +34,12 @@ public class HomeFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private ArrayList playListGridData;
+    private Background mBackground;
+
+    private List<PlayList> mPlayListGridData;
     private GridView mGridView;
     private GridViewAdapter mGridAdapter;
+
 
     private OnHomeFragmentInteractionListener mHomeFragmentListener;
 
@@ -76,17 +80,19 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mBackground = (Background) getActivity().getApplication();
+        mBackground.setPlayList();
+
         mGridView = (GridView) getView().findViewById(R.id.gridView);
         mGridView.setHorizontalSpacing(ResolutionUtils.convertPercentToPixelWidth(getContext().getApplicationContext(),1.25f));
         mGridView.setVerticalSpacing(ResolutionUtils.convertPercentToPixelHight(getContext().getApplicationContext(), 0.7525f));
 
         //Initialize with empty data
-        playListGridData = new ArrayList<PlayList>();
-        mGridAdapter = new GridViewAdapter(getContext().getApplicationContext(), R.layout.grid_item_layout, playListGridData);
+        mPlayListGridData = mBackground.getPlayList();
+        mGridAdapter = new GridViewAdapter(getContext().getApplicationContext(), R.layout.grid_item_layout, mPlayListGridData);
         mGridView.setAdapter(mGridAdapter);
         mGridView.setOnItemClickListener(mGridAdapter);
 
-        getPlayList();
     }
 
     @Override
@@ -111,25 +117,6 @@ public class HomeFragment extends Fragment {
         mHomeFragmentListener = null;
     }
 
-
-    private void getPlayList() {
-        RestClient restClient = RestClient.getInstance();
-        Retrofit retrofitClient = restClient.getRetrofitClient();
-        SoundCloundService soundCloundService = retrofitClient.create(SoundCloundService.class);
-
-        Call<List<PlayList>> playList = soundCloundService.getPlayLists();
-        playList.enqueue(new Callback<List<PlayList>>() {
-            @Override
-            public void onResponse(Call<List<PlayList>> call, Response<List<PlayList>> response) {
-                List<PlayList> playLists = response.body();
-                mGridAdapter.setGridData(playLists);
-            }
-            @Override
-            public void onFailure(Call<List<PlayList>> call, Throwable t) {
-            }
-        });
-
-    }
 
     /**
      * This interface must be implemented by activities that contain this

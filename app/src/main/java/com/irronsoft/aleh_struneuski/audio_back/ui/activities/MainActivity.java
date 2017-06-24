@@ -71,17 +71,9 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
         drawerLayout = (DrawerLayout) findViewById(R.id.main_content);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        //navigationView.getMenu().getItem(1).setEnabled(false);
-        //navigationView.getMenu().getItem(1).getIcon().setColorFilter(Color.GRAY, PorterDuff.Mode.SRC_IN);
+//        fab = (FloatingActionButton) findViewById(R.id.fab);
 
-/////        fab = (FloatingActionButton) findViewById(R.id.fab);
-
-        // load toolbar titles from string resources
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
-
-//        <include  layout="@layout/app_bar_main"
-//        android:layout_width="match_parent"
-//        android:layout_height="match_parent" />
 
 
 //        fab.setOnClickListener(new View.OnClickListener() {
