@@ -37,5 +37,6 @@ dependencies {
     compile 'net.bohush.geometricprogressview:geometricprogressview:1.1.1'
     compile 'com.github.afollestad:async:0.2.3'
     compile 'com.google.android.gms:play-services-appindexing:8.1.0'
+    compile 'com.alexandrepiveteau:material-tutorial:1.1.0'
     compile 'com.android.support:support-v4:25'
 }

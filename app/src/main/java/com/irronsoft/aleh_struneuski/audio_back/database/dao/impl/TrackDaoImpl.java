@@ -42,7 +42,9 @@ public class TrackDaoImpl implements TrackDao {
                     }
                 }
             } finally {
-                cursor.close();
+                if (null != cursor && !cursor.isClosed()) {
+                    cursor.close();
+                }
             }
         return tracks;
     }
@@ -61,7 +63,9 @@ public class TrackDaoImpl implements TrackDao {
                     track.setDowload(true);
                 }
             } finally {
-                cursor.close();
+                if (null != cursor && !cursor.isClosed()) {
+                    cursor.close();
+                }
             }
         }
     }
@@ -103,7 +107,9 @@ public class TrackDaoImpl implements TrackDao {
                 return track;
             }
         } finally {
-            cursor.close();
+            if (null != cursor && !cursor.isClosed()) {
+                cursor.close();
+            }
         }
         return null;
     }

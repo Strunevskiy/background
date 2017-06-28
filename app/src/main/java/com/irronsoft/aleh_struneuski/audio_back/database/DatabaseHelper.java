@@ -53,7 +53,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private boolean loggingEnabled = true;
 
     private DatabaseHelper(Context context) {
-        super(context, DB_NAME,null,VERSION);
+        super(context, DB_NAME, null, VERSION);
         this.db = getWritableDatabase();
     }
 
@@ -79,7 +79,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if(databaseHelper != null) {
             return databaseHelper;
         }
-        if(context == null) {
+        if (context == null) {
             throw new NullPointerException("Context cannot be null");
         }
         databaseHelper = new DatabaseHelper(context.getApplicationContext());
@@ -88,17 +88,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public synchronized boolean containRecordByTitle(String title) {
         boolean found = false;
+        Cursor cursor = null;
         try {
-            Cursor cursor = db.rawQuery("SELECT " + COLUMN_ID + " FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = " + title , null);
-            if (cursor != null && cursor.getCount() > 0) {
+            cursor = db.rawQuery("SELECT " + COLUMN_ID + " FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = " + title , null);
+            if (cursor.getCount() > 0) {
                 found = true;
-                cursor.close();
             }
         } catch (SQLiteException e) {
-            if(loggingEnabled) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
             found = false;
+        } finally {
+            if (null != cursor && !cursor.isClosed()) {
+                cursor.close();
+            }
         }
         return found;
     }
