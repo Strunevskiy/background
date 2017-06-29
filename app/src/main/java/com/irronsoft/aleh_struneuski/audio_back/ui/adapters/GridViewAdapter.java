@@ -31,7 +31,6 @@ public class GridViewAdapter extends ArrayAdapter<PlayList> implements AdapterVi
 
     private Context mContext;
     private int layoutResourceId;
-    private List<PlayList> mGridData = new ArrayList<PlayList>();
 
     public static class ViewHolder {
         public TextView titleTextView;
@@ -42,17 +41,15 @@ public class GridViewAdapter extends ArrayAdapter<PlayList> implements AdapterVi
         super(mContext, layoutResourceId, mGridData);
         this.layoutResourceId = layoutResourceId;
         this.mContext = mContext;
-        this.mGridData = mGridData;
     }
-
 
     /**
      * Updates grid data and refresh grid items.
      * @param mGridData
      */
     public void setGridData(List<PlayList> mGridData) {
-        this.mGridData.clear();
-        this.mGridData.addAll(mGridData);
+        this.clear();
+        this.addAll(mGridData);
         this.notifyDataSetChanged();
     }
 
@@ -75,7 +72,7 @@ public class GridViewAdapter extends ArrayAdapter<PlayList> implements AdapterVi
             holder = (ViewHolder) row.getTag();
         }
 
-        PlayList playList = mGridData.get(position);
+        PlayList playList = getItem(position);
         holder.titleTextView.setText(playList.getPermalink());
 
         Picasso.with(holder.imageView.getContext()).load(playList.getArtworkUrl()).fit().into(holder.imageView);
@@ -85,7 +82,9 @@ public class GridViewAdapter extends ArrayAdapter<PlayList> implements AdapterVi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        PlayList playList = mGridData.get(position);
+
+
+        PlayList playList = getItem(position);
         List<Track> tracks =  playList.getTracks();
 
         Intent playerListActivity = new Intent(getContext(), PlayerListActivity.class);

@@ -15,8 +15,12 @@
     <string name="delete" translatable="true">Delete</string>
     <string name="close" translatable="true">Close</string>
     <string name="cancel" translatable="true">Cancel</string>
-    <string name="error" translatable="true">An error occurred.</string>
-    <string name="error_msg" translatable="true">Something went wrong.</string>
+    <string name="error_internet" translatable="true">No internet connection</string>
+    <string name="info_internet" translatable="true">Connecting to the Internet</string>
+    <string name="error_common" translatable="true">An error occurred</string>
+    <string name="error_msg" translatable="true">Something went wrong</string>
+
+
 
 
     <!-- Navigation Drawer menu labels -->

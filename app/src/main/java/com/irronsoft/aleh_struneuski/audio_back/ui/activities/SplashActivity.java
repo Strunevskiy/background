@@ -32,7 +32,8 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        mBackground = (Background) getApplicationContext();
+        mBackground = (Background) this.getApplicationContext();
+
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         openRequest();
@@ -51,7 +52,7 @@ public class SplashActivity extends AppCompatActivity {
                         @Nullable
                         @Override
                         protected Object run() throws InterruptedException {
-                            mBackground.setPlayList();
+                            mBackground.extractPlayList(null);
                             return null;
                         }
                     }

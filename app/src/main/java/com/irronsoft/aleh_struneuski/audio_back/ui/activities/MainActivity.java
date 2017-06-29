@@ -21,6 +21,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 
 
@@ -33,7 +34,7 @@ import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnTrackListener;
 
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements HomeFragment.OnHomeFragmentInteractionListener, OnTrackListener {
+public class MainActivity extends AppCompatActivity implements OnTrackListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -243,6 +244,19 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
+
+                SubMenu subMenu = navigationView.getMenu().getItem(3).getSubMenu();
+
+                MenuItem settingsItem = subMenu.getItem(0);
+                MenuItem shareThisAppItem = subMenu.getItem(1);
+
+                if (shareThisAppItem.isChecked() && CURRENT_TAG == TAG_SETTINGS) {
+                    settingsItem.setChecked(true);
+                    shareThisAppItem.setChecked(false);
+                } else if (settingsItem.isChecked() && CURRENT_TAG != TAG_SETTINGS){
+                    settingsItem.setChecked(false);
+                }
+
                 selectNavMenu();
             }
 

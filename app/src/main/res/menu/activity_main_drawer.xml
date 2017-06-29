@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/main_group"
+        android:checkableBehavior="single">
 
         <item
             android:id="@+id/nav_home"
-            android:title="@string/nav_home"
-            android:icon="@drawable/ic_background" />
+            android:icon="@drawable/ic_background"
+            android:title="@string/nav_home" />
         <item
             android:id="@+id/nav_my_music"
-            android:title="@string/nav_my_music"
-            android:icon="@drawable/ic_profile_user"/>
+            android:icon="@drawable/ic_profile_user"
+            android:title="@string/nav_my_music" />
         <item
             android:id="@+id/nav_search_for_track"
-            android:title="@string/nav_search_for_track"
-            android:icon="@drawable/ic_search" />
+            android:icon="@drawable/ic_search"
+            android:title="@string/nav_search_for_track" />
     </group>
 
-    <item android:title="Settings" >
+    <item android:title="Settings">
         <menu>
-            <group android:checkableBehavior="single">
-            <item
-                android:id="@+id/setting"
-                android:title="@string/settings"
-                android:icon="@drawable/ic_settings"/>
-            <item
-                android:id="@+id/share_app"
-                android:title="@string/share_app"
-                android:icon="@drawable/ic_share"/>
+            <group
+                android:id="@+id/helper_group"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/setting"
+                    android:icon="@drawable/ic_settings"
+                    android:title="@string/settings" />
+                <item
+                    android:id="@+id/share_app"
+                    android:icon="@drawable/ic_share"
+                    android:title="@string/share_app" />
             </group>
         </menu>
     </item>
