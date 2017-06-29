@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,7 +74,7 @@ public class GridViewAdapter extends ArrayAdapter<PlayList> implements AdapterVi
         }
 
         PlayList playList = getItem(position);
-        holder.titleTextView.setText(playList.getPermalink());
+        holder.titleTextView.setText(playList.getDescription());
 
         Picasso.with(holder.imageView.getContext()).load(playList.getArtworkUrl()).fit().into(holder.imageView);
 

@@ -39,7 +39,7 @@ public class PlayList {
 
     @SerializedName("description")
     @Expose
-    private Object description;
+    private String description;
 
     @SerializedName("uri")
     @Expose
@@ -276,7 +276,7 @@ public class PlayList {
      * @return
      *     The description
      */
-    public Object getDescription() {
+    public String getDescription() {
         return description;
     }
 
@@ -285,7 +285,7 @@ public class PlayList {
      * @param description
      *     The description
      */
-    public void setDescription(Object description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
