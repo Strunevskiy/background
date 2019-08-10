@@ -1,6 +1,5 @@
 # Background - The Great Music App
 * Background is music player with predefined playlists of background music for relax, party, bars and restaurants. 
-* The music player allows to download and listen to your favorite music anywhere for free. 
 * Creating your own music collection is easy using search of the application.
 
 # Libraries used to build app

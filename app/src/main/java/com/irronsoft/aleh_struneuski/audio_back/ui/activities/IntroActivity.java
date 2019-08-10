@@ -52,13 +52,20 @@ public class IntroActivity extends TutorialActivity {
                         .setDescription(getResources().getString(R.string.app_des))
                         .setImageResource(R.mipmap.splash)
                         .build();
+
             case 1:
+                return new TutorialFragment.Builder()
+                        .setTitle(getResources().getString(R.string.playlist_mode))
+                        .setDescription(getResources().getString(R.string.playlists_des))
+                        .setImageResource(R.drawable.playlist_offline)
+                        .build();
+            case 2:
                 return new TutorialFragment.Builder()
                         .setTitle(getResources().getString(R.string.search_mode))
                         .setDescription(getResources().getString(R.string.search_des))
                         .setImageResource(R.drawable.playlist_search)
                         .build();
-            case 2:
+            case 3:
                 return new TutorialFragment.Builder()
                         .setTitle(getResources().getString(R.string.feedback_mode))
                         .setDescription(getResources().getString(R.string.feedback_des))

@@ -58,7 +58,8 @@
     <string name="settings">Setting</string>
     <string name="share_app">Share this app</string>
 
-    <string name="playlists_mode">Playlists</string>
+    <string name="app_mode">Predefined playlists</string>
+    <string name="playlist_mode">Relaxing playlists</string>
     <string name="search_mode">Search</string>
     <string name="feedback_mode">Feedback</string>
 
