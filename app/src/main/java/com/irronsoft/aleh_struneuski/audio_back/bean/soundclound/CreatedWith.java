@@ -1,4 +1,3 @@
-
 package com.irronsoft.aleh_struneuski.audio_back.bean.soundclound;
 
 import com.google.gson.annotations.Expose;
@@ -29,126 +28,98 @@ public class CreatedWith {
     private String kind;
 
     /**
-     * 
-     * @return
-     *     The permalinkUrl
+     * @return The permalinkUrl
      */
     public String getPermalinkUrl() {
         return permalinkUrl;
     }
 
     /**
-     * 
-     * @param permalinkUrl
-     *     The permalink_url
+     * @param permalinkUrl The permalink_url
      */
     public void setPermalinkUrl(String permalinkUrl) {
         this.permalinkUrl = permalinkUrl;
     }
 
     /**
-     * 
-     * @return
-     *     The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * 
-     * @param name
-     *     The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * 
-     * @return
-     *     The externalUrl
+     * @return The externalUrl
      */
     public String getExternalUrl() {
         return externalUrl;
     }
 
     /**
-     * 
-     * @param externalUrl
-     *     The external_url
+     * @param externalUrl The external_url
      */
     public void setExternalUrl(String externalUrl) {
         this.externalUrl = externalUrl;
     }
 
     /**
-     * 
-     * @return
-     *     The uri
+     * @return The uri
      */
     public String getUri() {
         return uri;
     }
 
     /**
-     * 
-     * @param uri
-     *     The uri
+     * @param uri The uri
      */
     public void setUri(String uri) {
         this.uri = uri;
     }
 
     /**
-     * 
-     * @return
-     *     The creator
+     * @return The creator
      */
     public String getCreator() {
         return creator;
     }
 
     /**
-     * 
-     * @param creator
-     *     The creator
+     * @param creator The creator
      */
     public void setCreator(String creator) {
         this.creator = creator;
     }
 
     /**
-     * 
-     * @return
-     *     The id
+     * @return The id
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     * 
-     * @param id
-     *     The id
+     * @param id The id
      */
     public void setId(Integer id) {
         this.id = id;
     }
 
     /**
-     * 
-     * @return
-     *     The kind
+     * @return The kind
      */
     public String getKind() {
         return kind;
     }
 
     /**
-     * 
-     * @param kind
-     *     The kind
+     * @param kind The kind
      */
     public void setKind(String kind) {
         this.kind = kind;

@@ -1,8 +1,6 @@
 package com.irronsoft.aleh_struneuski.audio_back.utils;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.preference.PreferenceManager;
 
 public class PreferenceUtils {

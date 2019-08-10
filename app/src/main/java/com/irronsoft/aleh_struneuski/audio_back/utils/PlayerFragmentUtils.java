@@ -1,16 +1,10 @@
 package com.irronsoft.aleh_struneuski.audio_back.utils;
 
-import android.content.Context;
-
-import com.irronsoft.aleh_struneuski.audio_back.R;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
 import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.components.PlayerFragment;
 
 import java.util.List;
 
-/**
- * Created by alehstruneuski on 6/3/17.
- */
 public final class PlayerFragmentUtils {
 
     private PlayerFragmentUtils() {

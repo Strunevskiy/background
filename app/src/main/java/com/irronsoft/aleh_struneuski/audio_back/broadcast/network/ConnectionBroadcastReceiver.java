@@ -9,8 +9,6 @@ import android.widget.ArrayAdapter;
 
 import com.irronsoft.aleh_struneuski.audio_back.Background;
 import com.irronsoft.aleh_struneuski.audio_back.R;
-import com.irronsoft.aleh_struneuski.audio_back.constants.ProjectConstants;
-import com.irronsoft.aleh_struneuski.audio_back.utils.NetworkUtils;
 
 public class ConnectionBroadcastReceiver extends BroadcastReceiver {
 
@@ -32,15 +30,15 @@ public class ConnectionBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        if(intent == null || intent.getExtras() == null)
+        if (intent == null || intent.getExtras() == null)
             return;
 
         ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo ni = manager.getActiveNetworkInfo();
 
-        if(ni != null && ni.getState() == NetworkInfo.State.CONNECTED) {
+        if (ni != null && ni.getState() == NetworkInfo.State.CONNECTED) {
             connected = true;
-        } else if(intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY,Boolean.FALSE)) {
+        } else if (intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, Boolean.FALSE)) {
             connected = false;
             isConnectedPrvState = false;
         }

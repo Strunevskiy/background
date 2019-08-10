@@ -20,10 +20,6 @@ public enum DownloadingStatus {
         this.downloadStatus = downloadStatus;
     }
 
-    public String getDownloadStatus() {
-        return downloadStatus;
-    }
-
     public static DownloadingStatus getValue(String status) {
         for (DownloadingStatus downloadingStatus : DownloadingStatus.values()) {
             if (downloadingStatus.getDownloadStatus().equalsIgnoreCase(status)) {
@@ -31,6 +27,10 @@ public enum DownloadingStatus {
             }
         }
         return null;
+    }
+
+    public String getDownloadStatus() {
+        return downloadStatus;
     }
 
 }

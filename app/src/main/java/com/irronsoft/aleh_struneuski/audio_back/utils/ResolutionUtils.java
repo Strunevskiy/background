@@ -3,9 +3,6 @@ package com.irronsoft.aleh_struneuski.audio_back.utils;
 import android.content.Context;
 import android.util.DisplayMetrics;
 
-/**
- * Created by alehstruneuski on 10/16/16.
- */
 public final class ResolutionUtils {
 
     private ResolutionUtils() {

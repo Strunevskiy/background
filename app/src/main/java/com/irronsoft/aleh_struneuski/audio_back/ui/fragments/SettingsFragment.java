@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
 import com.irronsoft.aleh_struneuski.audio_back.Background;
 import com.irronsoft.aleh_struneuski.audio_back.R;
 import com.irronsoft.aleh_struneuski.audio_back.utils.PreferenceUtils;
@@ -40,8 +39,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
         background = (Background) getContext().getApplicationContext();
         prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
@@ -72,7 +70,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public  void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
     }
 

@@ -9,13 +9,20 @@ import java.util.List;
  */
 public interface TrackDao {
 
-    public List<Track> getTracksFromDataBase();
-    public boolean insertRecord(Track record, String soundFilePath, String imageFilePath);
-    public boolean updateSoundDataByStreamUrl(String streamUrl, String streamFilePath, long idStreamFilePath);
-    public boolean updateImageDataByStreamUrl(String streamUrl, String imageFilePath, long idImageFilePath);
-    public Track getRecordByTitle(String title);
-    public boolean removeRecordByTitle(String title);
-    public boolean containRecordByTitle(String title);
-    public void tagDowloadedTracks(List<Track> items);
+    List<Track> getTracksFromDataBase();
+
+    boolean insertRecord(Track record, String soundFilePath, String imageFilePath);
+
+    boolean updateSoundDataByStreamUrl(String streamUrl, String streamFilePath, long idStreamFilePath);
+
+    boolean updateImageDataByStreamUrl(String streamUrl, String imageFilePath, long idImageFilePath);
+
+    Track getRecordByTitle(String title);
+
+    boolean removeRecordByTitle(String title);
+
+    boolean containRecordByTitle(String title);
+
+    void tagDowloadedTracks(List<Track> items);
 
 }

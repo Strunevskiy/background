@@ -6,30 +6,11 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by alehstruneuski on 5/1/17.
- */
 public class DatabaseHelper extends SQLiteOpenHelper {
-
-    private static final int VERSION = 1;
-    private static final String DB_NAME = "com_irronsoft_background.db";
-    private static final String TABLE_NAME = "tracks";
-
-    private static final String COLUMN_ID = "_id";
-    private static final String COLUMN_ID_SOUND = "_id_sound";
-    private static final String COLUMN_TITLE = "_title";
-    private static final String COLUMN_STREAM_URL = "_stream_url";
-    private static final String COLUMN_ARTWORK_URL = "_artwork_url";
-    private static final String COLUMN_SOUND_FILEPATH = "_sound_filepath";
-    private static final String COLUMN_IMAGE_FILEPATH = "_image_filepath";
-    private static final String COLUMN_ID_SOUND_FILEPATH = "_id_sound_filepath";
-    private static final String COLUMN_ID_IMAGE_FILEPATH = "_id_image_filepath";
-
 
     /*Convenience INDEXES. DO NOT USE for anything else other than extracting
      *from a cursor that has all columns. Helps with
@@ -43,10 +24,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final int INDEX_COLUMN_IMAGE_FILEPATH = 6;
     public static final int INDEX_COLUMN_ID_SOUND_FILEPATH = 7;
     public static final int INDEX_COLUMN_ID_IMAGE_FILEPATH = 8;
-
-
     static final int EMPTY_COLUMN_VALUE = -1;
-
+    private static final int VERSION = 1;
+    private static final String DB_NAME = "com_irronsoft_background.db";
+    private static final String TABLE_NAME = "tracks";
+    private static final String COLUMN_ID = "_id";
+    private static final String COLUMN_ID_SOUND = "_id_sound";
+    private static final String COLUMN_TITLE = "_title";
+    private static final String COLUMN_STREAM_URL = "_stream_url";
+    private static final String COLUMN_ARTWORK_URL = "_artwork_url";
+    private static final String COLUMN_SOUND_FILEPATH = "_sound_filepath";
+    private static final String COLUMN_IMAGE_FILEPATH = "_image_filepath";
+    private static final String COLUMN_ID_SOUND_FILEPATH = "_id_sound_filepath";
+    private static final String COLUMN_ID_IMAGE_FILEPATH = "_id_image_filepath";
     private static DatabaseHelper databaseHelper;
 
     private final SQLiteDatabase db;
@@ -55,6 +45,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private DatabaseHelper(Context context) {
         super(context, DB_NAME, null, VERSION);
         this.db = getWritableDatabase();
+    }
+
+    public static synchronized DatabaseHelper getInstance(Context context) {
+        if (databaseHelper != null) {
+            return databaseHelper;
+        }
+        if (context == null) {
+            throw new NullPointerException("Context cannot be null");
+        }
+        databaseHelper = new DatabaseHelper(context.getApplicationContext());
+        return databaseHelper;
     }
 
     @Override
@@ -75,22 +76,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
     }
 
-    public static synchronized DatabaseHelper getInstance(Context context) {
-        if(databaseHelper != null) {
-            return databaseHelper;
-        }
-        if (context == null) {
-            throw new NullPointerException("Context cannot be null");
-        }
-        databaseHelper = new DatabaseHelper(context.getApplicationContext());
-        return databaseHelper;
-    }
-
     public synchronized boolean containRecordByTitle(String title) {
         boolean found = false;
         Cursor cursor = null;
         try {
-            cursor = db.rawQuery("SELECT " + COLUMN_ID + " FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = " + title , null);
+            cursor = db.rawQuery("SELECT " + COLUMN_ID + " FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = " + title, null);
             if (cursor.getCount() > 0) {
                 found = true;
             }
@@ -108,11 +98,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public String getInsertStatement(long soundId, String title, String streamUrl, String artworkUrl,
-                              String soundPath, String imagePath)
-    {
+                                     String soundPath, String imagePath) {
         return "INSERT INTO " + TABLE_NAME +
                 " (" + COLUMN_ID_SOUND + "," + COLUMN_TITLE + "," + COLUMN_STREAM_URL + " , " + COLUMN_ARTWORK_URL + ", " + COLUMN_SOUND_FILEPATH + ", " + COLUMN_IMAGE_FILEPATH + ")" +
-                "VALUES " + "('" + soundId+ "'," + DatabaseUtils.sqlEscapeString(title) + ", '" + streamUrl + "', '" + artworkUrl + "', '" + soundPath + "', '" + imagePath + "' )";
+                "VALUES " + "('" + soundId + "'," + DatabaseUtils.sqlEscapeString(title) + ", '" + streamUrl + "', '" + artworkUrl + "', '" + soundPath + "', '" + imagePath + "' )";
     }
 
     public synchronized boolean insert(long soundId, String title, String streamUrl, String artworkUrl, String soundPath, String imagePath) {
@@ -135,7 +124,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 db.execSQL(statement);
             }
             db.setTransactionSuccessful();
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (loggingEnabled) {
                 e.printStackTrace();
             }
@@ -144,8 +133,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             db.endTransaction();
             inserted = true;
-        }catch (SQLiteException e) {
-            if(loggingEnabled) {
+        } catch (SQLiteException e) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
         }
@@ -153,14 +142,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public synchronized boolean deleteByTitle(String title) {
-        String[] args = { title };
+        String[] args = {title};
         boolean removed = false;
         try {
             db.beginTransaction();
             db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = ?", args);
             db.setTransactionSuccessful();
-        }catch (SQLiteException e) {
-            if(loggingEnabled) {
+        } catch (SQLiteException e) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
         }
@@ -168,8 +157,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             db.endTransaction();
             removed = true;
-        }catch (SQLiteException e) {
-            if(loggingEnabled) {
+        } catch (SQLiteException e) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
         }
@@ -177,15 +166,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public synchronized boolean deleteByStreamUrl(String streamUrl) {
-        String[] args = { streamUrl };
+        String[] args = {streamUrl};
 
         boolean removed = false;
         try {
             db.beginTransaction();
             db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_STREAM_URL + " = ?", args);
             db.setTransactionSuccessful();
-        }catch (SQLiteException e) {
-            if(loggingEnabled) {
+        } catch (SQLiteException e) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
         }
@@ -193,8 +182,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             db.endTransaction();
             removed = true;
-        }catch (SQLiteException e) {
-            if(loggingEnabled) {
+        } catch (SQLiteException e) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
         }
@@ -204,8 +193,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public synchronized Cursor getByTitle(String title) {
         try {
             return db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = " + title, null);
-        }catch (SQLiteException e) {
-            if(loggingEnabled) {
+        } catch (SQLiteException e) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
             return null;
@@ -214,10 +203,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public synchronized Cursor getByStreamUrl(String streamUrl) {
         try {
-            String[] args = { streamUrl };
+            String[] args = {streamUrl};
             return db.rawQuery("SELECT * FROM " + TABLE_NAME + " WHERE " + COLUMN_STREAM_URL + " = ?", args);
-        }catch (SQLiteException e) {
-            if(loggingEnabled) {
+        } catch (SQLiteException e) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
             return null;
@@ -227,9 +216,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public synchronized Cursor get() {
         try {
             return db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
-        }catch (SQLiteException e) {
+        } catch (SQLiteException e) {
 
-            if(loggingEnabled) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
             return null;
@@ -237,24 +226,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public synchronized boolean updateImageData(String streamUrl, String imageFilepath, long idImageFilePath) {
-        String[] args = { imageFilepath, String.valueOf(idImageFilePath), streamUrl };
+        String[] args = {imageFilepath, String.valueOf(idImageFilePath), streamUrl};
 
         boolean updated = false;
         try {
             db.beginTransaction();
             db.execSQL("UPDATE " + TABLE_NAME + " SET " + COLUMN_IMAGE_FILEPATH + " = ?" + ", " + COLUMN_ID_IMAGE_FILEPATH + " = ?" + " WHERE " + COLUMN_STREAM_URL + " = ?", args);
             db.setTransactionSuccessful();
-        }catch (SQLiteException e){
-            if(loggingEnabled) {
+        } catch (SQLiteException e) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
         }
         try {
             db.endTransaction();
             updated = true;
-        }catch (SQLiteException e) {
+        } catch (SQLiteException e) {
 
-            if(loggingEnabled) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
         }
@@ -262,17 +251,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public synchronized boolean updateSoundData(String streamUrl, String soundFilepath, long idStreamFilePath) {
-        String[] args = { soundFilepath, String.valueOf(idStreamFilePath), streamUrl };
+        String[] args = {soundFilepath, String.valueOf(idStreamFilePath), streamUrl};
 
         boolean updated = false;
         try {
             db.beginTransaction();
-            db.execSQL("UPDATE " + TABLE_NAME + " SET " + COLUMN_SOUND_FILEPATH + " = ?" + ", " + COLUMN_ID_SOUND_FILEPATH + " = ?"  + " WHERE " + COLUMN_STREAM_URL + " = ?" , args);
+            db.execSQL("UPDATE " + TABLE_NAME + " SET " + COLUMN_SOUND_FILEPATH + " = ?" + ", " + COLUMN_ID_SOUND_FILEPATH + " = ?" + " WHERE " + COLUMN_STREAM_URL + " = ?", args);
 
             db.setTransactionSuccessful();
-        }catch (SQLiteException e){
+        } catch (SQLiteException e) {
 
-            if(loggingEnabled) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
         }
@@ -280,9 +269,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             db.endTransaction();
             updated = true;
-        }catch (SQLiteException e) {
-
-            if(loggingEnabled) {
+        } catch (SQLiteException e) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
         }
@@ -295,7 +283,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.beginTransaction();
             db.execSQL("DELETE FROM " + TABLE_NAME + " WHERE " + COLUMN_TITLE + " = " + title);
             db.setTransactionSuccessful();
-        }catch (SQLiteException e){
+        } catch (SQLiteException e) {
 
             if (loggingEnabled) {
                 e.printStackTrace();
@@ -307,7 +295,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             remove = true;
         } catch (SQLiteException e) {
 
-            if(loggingEnabled) {
+            if (loggingEnabled) {
                 e.printStackTrace();
             }
         }

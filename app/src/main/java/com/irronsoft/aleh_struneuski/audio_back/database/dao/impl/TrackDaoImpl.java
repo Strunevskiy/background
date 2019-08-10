@@ -12,9 +12,6 @@ import com.irronsoft.aleh_struneuski.audio_back.database.dao.TrackDao;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by alehstruneuski on 5/1/17.
- */
 public class TrackDaoImpl implements TrackDao {
 
     private Context context;
@@ -27,31 +24,31 @@ public class TrackDaoImpl implements TrackDao {
     public List<Track> getTracksFromDataBase() {
         List<Track> tracks = new ArrayList<>();
         Cursor cursor = DatabaseHelper.getInstance(context).get();
-            try {
-                if (cursor != null && cursor.getCount() > 0) {
-                    while (cursor.moveToNext()) {
-                        Track track = new Track();
-                        track.getDowloadIds().add(cursor.getLong(DatabaseHelper.INDEX_COLUMN_ID_SOUND_FILEPATH));
-                        track.getDowloadIds().add(cursor.getLong(DatabaseHelper.INDEX_COLUMN_ID_IMAGE_FILEPATH));
-                        track.setTitle(cursor.getString(DatabaseHelper.INDEX_COLUMN_TITLE));
-                        track.setStreamURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_SOUND_FILEPATH));
-                        track.setArtworkURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_IMAGE_FILEPATH));
-                        track.setDownloadingStatus(DownloadingStatus.DOWNLOADED);
-                        track.setDowload(true);
-                        tracks.add(track);
-                    }
-                }
-            } finally {
-                if (null != cursor && !cursor.isClosed()) {
-                    cursor.close();
+        try {
+            if (cursor != null && cursor.getCount() > 0) {
+                while (cursor.moveToNext()) {
+                    Track track = new Track();
+                    track.getDowloadIds().add(cursor.getLong(DatabaseHelper.INDEX_COLUMN_ID_SOUND_FILEPATH));
+                    track.getDowloadIds().add(cursor.getLong(DatabaseHelper.INDEX_COLUMN_ID_IMAGE_FILEPATH));
+                    track.setTitle(cursor.getString(DatabaseHelper.INDEX_COLUMN_TITLE));
+                    track.setStreamURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_SOUND_FILEPATH));
+                    track.setArtworkURL(cursor.getString(DatabaseHelper.INDEX_COLUMN_IMAGE_FILEPATH));
+                    track.setDownloadingStatus(DownloadingStatus.DOWNLOADED);
+                    track.setDowload(true);
+                    tracks.add(track);
                 }
             }
+        } finally {
+            if (null != cursor && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
         return tracks;
     }
 
     @Override
     public void tagDowloadedTracks(List<Track> tracks) {
-        for (Track track: tracks) {
+        for (Track track : tracks) {
             Cursor cursor = DatabaseHelper.getInstance(context).getByStreamUrl(track.getStreamURL());
             try {
                 if (null != cursor && cursor.getCount() > 0 && cursor.moveToFirst()) {

@@ -48,7 +48,6 @@
         </RelativeLayout>
 
     </RelativeLayout>
-
     <ImageView
         android:id="@+id/dowload_image"
         android:layout_alignEnd="@id/track_meta_data_container"
@@ -60,21 +59,4 @@
         android:layout_marginBottom="10dp"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content" />
-
-    <net.bohush.geometricprogressview.GeometricProgressView
-        android:id="@+id/progressView"
-        android:layout_alignEnd="@id/track_meta_data_container"
-        android:layout_alignRight="@+id/track_meta_data_container"
-        android:layout_alignBottom="@+id/track_meta_data_container"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        app:gp_type="triangle"
-        app:gp_number_of_angles="23"
-        app:gp_color="@color/colorPrimaryDark"
-        app:gp_duration="1000"
-        app:gp_figure_padding="3dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp"
-        android:visibility="gone"/>
-
 </RelativeLayout>

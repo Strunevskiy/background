@@ -1,19 +1,13 @@
 package com.irronsoft.aleh_struneuski.audio_back.ui.fragments;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.irronsoft.aleh_struneuski.audio_back.R;
@@ -50,23 +43,18 @@ import retrofit2.Retrofit;
 
 public class SearchForTrackFragment extends Fragment implements View.OnClickListener, AdapterView.OnItemClickListener, OnTrackListener {
 
-    private List<Track> listOfTracksFromDataBase;
-    private List<Track> mListItems;
-    private TrackAdapter mAdapter;
-
-    private MenuItem searchItem;
-    private SearchView searchView;
-
-    private PlayerFragment playerFragment;
-    private boolean isPlayerAttached = false;
-
-    private TrackDaoImpl trackDao;
-
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private List<Track> listOfTracksFromDataBase;
+    private List<Track> mListItems;
+    private TrackAdapter mAdapter;
+    private MenuItem searchItem;
+    private SearchView searchView;
+    private PlayerFragment playerFragment;
+    private boolean isPlayerAttached = false;
+    private TrackDaoImpl trackDao;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -95,8 +83,7 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_search_for_track, container, false);
     }
@@ -134,7 +121,7 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
     }
 
     @Override
-    public  void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         if (null != playerFragment) {
             playerFragment.onDestroy();
@@ -203,6 +190,7 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
                 List<Track> tracks = response.body();
                 loadTracks(tracks);
             }
+
             @Override
             public void onFailure(Call<List<Track>> call, Throwable t) {
             }
@@ -231,7 +219,7 @@ public class SearchForTrackFragment extends Fragment implements View.OnClickList
         }
     }
 
-    private Bundle put(String key, Parcelable value){
+    private Bundle put(String key, Parcelable value) {
         Bundle bundle = new Bundle();
         bundle.putParcelable(key, value);
         return bundle;

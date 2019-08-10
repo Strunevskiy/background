@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 
 import com.alexandrepiveteau.library.tutorial.TutorialActivity;
@@ -55,17 +54,11 @@ public class IntroActivity extends TutorialActivity {
                         .build();
             case 1:
                 return new TutorialFragment.Builder()
-                        .setTitle(getResources().getString(R.string.offline_mode))
-                        .setDescription(getResources().getString(R.string.offline_des))
-                        .setImageResource(R.drawable.playlist_offline)
-                        .build();
-            case 2:
-                return new TutorialFragment.Builder()
                         .setTitle(getResources().getString(R.string.search_mode))
                         .setDescription(getResources().getString(R.string.search_des))
                         .setImageResource(R.drawable.playlist_search)
                         .build();
-            case 3:
+            case 2:
                 return new TutorialFragment.Builder()
                         .setTitle(getResources().getString(R.string.feedback_mode))
                         .setDescription(getResources().getString(R.string.feedback_des))

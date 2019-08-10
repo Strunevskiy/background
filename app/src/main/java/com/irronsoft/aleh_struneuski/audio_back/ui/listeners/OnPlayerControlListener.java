@@ -6,6 +6,7 @@ package com.irronsoft.aleh_struneuski.audio_back.ui.listeners;
 
 public interface OnPlayerControlListener {
 
-    public boolean isPlayingPlayer();
-    public void togglePlayPausePlayer();
+    boolean isPlayingPlayer();
+
+    void togglePlayPausePlayer();
 }

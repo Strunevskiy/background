@@ -3,7 +3,6 @@
     <string name="app_description">The Great Music App</string>
     <string name="action_settings">Settings</string>
 
-
     <!-- Generic -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -20,19 +19,11 @@
     <string name="error_common" translatable="true">An error occurred</string>
     <string name="error_msg" translatable="true">Something went wrong</string>
 
-
-
-
-    <!-- Navigation Drawer menu labels -->
     <string name="nav_home">Background</string>
-    <string name="nav_my_music">My Music</string>
     <string name="nav_search_for_track">Search for track</string>
 
-
-    <!-- Toolbar titles when navigation menu item is selected -->
     <string-array name="nav_item_activity_titles">
         <item>Background</item>
-        <item>My Music</item>
         <item>Search</item>
         <item>Settings</item>
     </string-array>
@@ -61,29 +52,18 @@
     <string name="restart" translatable="true">Restart</string>
     <string name="restart_msg" translatable="true">Restart the app to apply changes…</string>
 
-
     <string name="action_clear_all">Clear All</string>
     <string name="action_logout">Logout</string>
     <string name="action_mark_all_read">Mark All as Read</string>
     <string name="settings">Setting</string>
     <string name="share_app">Share this app</string>
 
-
-    <string name="offline_mode">Offline</string>
     <string name="playlists_mode">Playlists</string>
     <string name="search_mode">Search</string>
     <string name="feedback_mode">Feedback</string>
 
-
     <string name="app_des">Background is music player with predefined playlists of background music</string>
-    <string name="offline_des">Download and listen to your favorite music anywhere</string>
     <string name="playlists_des">There are always playlists of background music for relaxing</string>
     <string name="search_des">Creating your own music collection using search is easy</string>
     <string name="feedback_des">Any feedback about this app is greatly appreciated. Please take some time to rate it on the play store.</string>
-
-
-
-
-
-
 </resources>

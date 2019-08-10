@@ -1,6 +1,5 @@
 package com.irronsoft.aleh_struneuski.audio_back.ui.fragments.components;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -9,12 +8,8 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
-import android.telecom.TelecomManager;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,8 +51,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -94,8 +87,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, On
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
         trackOnLoad = getArguments().getParcelable("track");
         return inflater.inflate(R.layout.player_fragment, container, false);
     }
@@ -207,9 +199,9 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, On
         setTrackTitleToPlayer(track);
         setTrackImageToPlayer(track);
 
-        boolean isPlayPreveously = false;
+        boolean isPlayPreviously = false;
         if (exoPlayer.getPlayWhenReady()) {
-            isPlayPreveously = true;
+            isPlayPreviously = true;
         }
 
         exoPlayer.stop();
@@ -219,11 +211,11 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, On
             urlOfTrackStream += "?client_id=" + ProjectConstants.CLIENT_ID;
             audioSource = new ExtractorMediaSource(Uri.parse(urlOfTrackStream), cacheDataSource, extractor, null, null);
         } else {
-            audioSource = new ExtractorMediaSource(Uri.parse(urlOfTrackStream), new FileDataSourceFactory(), extractor , null, null);
+            audioSource = new ExtractorMediaSource(Uri.parse(urlOfTrackStream), new FileDataSourceFactory(), extractor, null, null);
         }
         exoPlayer.prepare(audioSource);
 
-        if (isPlayPreveously) {
+        if (isPlayPreviously) {
             exoPlayer.setPlayWhenReady(true);
         }
     }
@@ -308,7 +300,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, On
         };
 
         String iconUrl = track.getArtworkURL();
-        if (null == iconUrl || iconUrl.isEmpty() || iconUrl.equals("null")){
+        if (null == iconUrl || iconUrl.isEmpty() || iconUrl.equals("null")) {
             Picasso.with(getContext()).load(R.mipmap.ic_launcher).into(loadtarget);
         } else if (!track.isDowload()) {
             Picasso.with(getContext()).load(iconUrl).into(loadtarget);

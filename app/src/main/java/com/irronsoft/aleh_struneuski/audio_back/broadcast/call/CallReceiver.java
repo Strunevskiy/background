@@ -4,17 +4,14 @@ import android.content.Context;
 
 import com.irronsoft.aleh_struneuski.audio_back.ui.listeners.OnPlayerControlListener;
 
-/**
- * Created by alehstruneuski on 6/17/17.
- */
-
 public class CallReceiver extends AbstractCallReceiver {
 
     private OnPlayerControlListener onPlayerControlListener;
 
     private boolean isPlayingBeforeStopping;
 
-    public CallReceiver() {}
+    public CallReceiver() {
+    }
 
     public CallReceiver(OnPlayerControlListener onPlayerControlListener) {
         this.onPlayerControlListener = onPlayerControlListener;
@@ -23,7 +20,7 @@ public class CallReceiver extends AbstractCallReceiver {
     @Override
     protected void onIncomingCallReceived(Context ctx) {
         isPlayingBeforeStopping = onPlayerControlListener.isPlayingPlayer();
-        if (isPlayingBeforeStopping)  {
+        if (isPlayingBeforeStopping) {
             onPlayerControlListener.togglePlayPausePlayer();
         }
     }
@@ -42,7 +39,7 @@ public class CallReceiver extends AbstractCallReceiver {
     @Override
     protected void onOutgoingCallStarted(Context ctx) {
         isPlayingBeforeStopping = onPlayerControlListener.isPlayingPlayer();
-        if (isPlayingBeforeStopping)  {
+        if (isPlayingBeforeStopping) {
             onPlayerControlListener.togglePlayPausePlayer();
         }
     }

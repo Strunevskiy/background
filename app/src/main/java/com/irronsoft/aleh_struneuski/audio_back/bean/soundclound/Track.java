@@ -5,28 +5,31 @@ import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by alehstruneuski on 6/13/16.
- */
 public class Track implements Parcelable {
 
+    public static final Creator<Track> CREATOR = new Creator<Track>() {
+        @Override
+        public Track createFromParcel(Parcel in) {
+            return new Track(in);
+        }
+
+        @Override
+        public Track[] newArray(int size) {
+            return new Track[size];
+        }
+    };
     private List<Long> mDowloadIds = new ArrayList<>();
     private DownloadingStatus downloadingStatus = DownloadingStatus.NOT_DOWNLOADED;
     private boolean isDowload;
-
     @SerializedName("title")
     private String mTitle;
-
     @SerializedName("id")
     private int mID;
-
     @SerializedName("stream_url")
     private String mStreamURL;
-
     @SerializedName("artwork_url")
     private String mArtworkURL;
 
@@ -40,19 +43,7 @@ public class Track implements Parcelable {
         mArtworkURL = in.readString();
     }
 
-    public static final Creator<Track> CREATOR = new Creator<Track>() {
-        @Override
-        public Track createFromParcel(Parcel in) {
-            return new Track(in);
-        }
-
-        @Override
-        public Track[] newArray(int size) {
-            return new Track[size];
-        }
-    };
-
-    public  boolean isDowload() {
+    public boolean isDowload() {
         return isDowload;
     }
 

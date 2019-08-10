@@ -1,10 +1,8 @@
 package com.irronsoft.aleh_struneuski.audio_back.ui.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +10,6 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.irronsoft.aleh_struneuski.audio_back.R;
@@ -33,11 +30,6 @@ public class GridViewAdapter extends ArrayAdapter<PlayList> implements AdapterVi
     private Context mContext;
     private int layoutResourceId;
 
-    public static class ViewHolder {
-        public TextView titleTextView;
-        public ImageView imageView;
-    }
-
     public GridViewAdapter(Context mContext, int layoutResourceId, List<PlayList> mGridData) {
         super(mContext, layoutResourceId, mGridData);
         this.layoutResourceId = layoutResourceId;
@@ -46,6 +38,7 @@ public class GridViewAdapter extends ArrayAdapter<PlayList> implements AdapterVi
 
     /**
      * Updates grid data and refresh grid items.
+     *
      * @param mGridData
      */
     public void setGridData(List<PlayList> mGridData) {
@@ -60,7 +53,7 @@ public class GridViewAdapter extends ArrayAdapter<PlayList> implements AdapterVi
         ViewHolder holder;
 
         if (row == null) {
-            LayoutInflater inflater =  (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             row = inflater.inflate(layoutResourceId, parent, false);
             setDimensOfCardViewItem(row);
 
@@ -86,7 +79,7 @@ public class GridViewAdapter extends ArrayAdapter<PlayList> implements AdapterVi
 
 
         PlayList playList = getItem(position);
-        List<Track> tracks =  playList.getTracks();
+        List<Track> tracks = playList.getTracks();
 
         Intent playerListActivity = new Intent(getContext(), PlayerListActivity.class);
         playerListActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -103,5 +96,10 @@ public class GridViewAdapter extends ArrayAdapter<PlayList> implements AdapterVi
         layoutParams.height = ResolutionUtils.convertPercentToPixelHight(cntx, hightPer);
         layoutParams.width = ResolutionUtils.convertPercentToPixelWidth(cntx, widthPer);
         row.setLayoutParams(layoutParams);
+    }
+
+    public static class ViewHolder {
+        public TextView titleTextView;
+        public ImageView imageView;
     }
 }

@@ -5,9 +5,6 @@ import com.irronsoft.aleh_struneuski.audio_back.constants.ProjectConstants;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by alehstruneuski on 6/13/16.
- */
 public class RestClient {
 
     private static RestClient restClient = null;
@@ -29,7 +26,7 @@ public class RestClient {
         return restClient;
     }
 
-    public Retrofit getRetrofitClient(){
+    public Retrofit getRetrofitClient() {
         return retrofit;
     }
 }

@@ -1,10 +1,7 @@
 package com.irronsoft.aleh_struneuski.audio_back;
 
 import android.app.Application;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.support.v4.view.ViewCompat;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,22 +13,13 @@ import android.widget.Toast;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.PlayList;
 import com.irronsoft.aleh_struneuski.audio_back.network.httpclient.RestClient;
 import com.irronsoft.aleh_struneuski.audio_back.network.httpclient.services.SoundCloundService;
-import com.irronsoft.aleh_struneuski.audio_back.ui.activities.IntroActivity;
-import com.irronsoft.aleh_struneuski.audio_back.ui.activities.SplashActivity;
-import com.irronsoft.aleh_struneuski.audio_back.ui.fragments.HomeFragment;
 
-import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-
-/**
- * Created by alehstruneuski on 6/24/17.
- */
 
 public class Background extends Application {
 
@@ -61,6 +49,7 @@ public class Background extends Application {
                     arrayAdapter.notifyDataSetChanged();
                 }
             }
+
             @Override
             public void onFailure(Call<List<PlayList>> call, Throwable t) {
                 isErrorPlayList = true;
@@ -68,12 +57,12 @@ public class Background extends Application {
         });
     }
 
-    public void setErrorPlayList(boolean isErrorPlayList) {
-        this.isErrorPlayList = isErrorPlayList;
-    }
-
     public boolean isErrorPlayList() {
         return isErrorPlayList;
+    }
+
+    public void setErrorPlayList(boolean isErrorPlayList) {
+        this.isErrorPlayList = isErrorPlayList;
     }
 
     public void showToast(String message) {

@@ -9,9 +9,6 @@ import android.renderscript.Element;
 import android.renderscript.RenderScript;
 import android.renderscript.ScriptIntrinsicBlur;
 
-/**
- * Created by alehstruneuski on 11/24/16.
- */
 public class BlurBuilder {
     private static final float BITMAP_SCALE = 0.3f;
     private static final float BLUR_RADIUS = 10.0f;

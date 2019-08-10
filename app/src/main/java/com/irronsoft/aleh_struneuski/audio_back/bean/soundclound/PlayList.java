@@ -1,10 +1,10 @@
-
 package com.irronsoft.aleh_struneuski.audio_back.bean.soundclound;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 
 
 public class PlayList {
@@ -146,612 +146,476 @@ public class PlayList {
     private Object labelId;
 
     /**
-     * 
-     * @return
-     *     The duration
+     * @return The duration
      */
     public Integer getDuration() {
         return duration;
     }
 
     /**
-     * 
-     * @param duration
-     *     The duration
+     * @param duration The duration
      */
     public void setDuration(Integer duration) {
         this.duration = duration;
     }
 
     /**
-     * 
-     * @return
-     *     The releaseDay
+     * @return The releaseDay
      */
     public Object getReleaseDay() {
         return releaseDay;
     }
 
     /**
-     * 
-     * @param releaseDay
-     *     The release_day
+     * @param releaseDay The release_day
      */
     public void setReleaseDay(Object releaseDay) {
         this.releaseDay = releaseDay;
     }
 
     /**
-     * 
-     * @return
-     *     The permalinkUrl
+     * @return The permalinkUrl
      */
     public String getPermalinkUrl() {
         return permalinkUrl;
     }
 
     /**
-     * 
-     * @param permalinkUrl
-     *     The permalink_url
+     * @param permalinkUrl The permalink_url
      */
     public void setPermalinkUrl(String permalinkUrl) {
         this.permalinkUrl = permalinkUrl;
     }
 
     /**
-     * 
-     * @return
-     *     The genre
+     * @return The genre
      */
     public Object getGenre() {
         return genre;
     }
 
     /**
-     * 
-     * @param genre
-     *     The genre
+     * @param genre The genre
      */
     public void setGenre(Object genre) {
         this.genre = genre;
     }
 
     /**
-     * 
-     * @return
-     *     The permalink
+     * @return The permalink
      */
     public String getPermalink() {
         return permalink;
     }
 
     /**
-     * 
-     * @param permalink
-     *     The permalink
+     * @param permalink The permalink
      */
     public void setPermalink(String permalink) {
         this.permalink = permalink;
     }
 
     /**
-     * 
-     * @return
-     *     The purchaseUrl
+     * @return The purchaseUrl
      */
     public Object getPurchaseUrl() {
         return purchaseUrl;
     }
 
     /**
-     * 
-     * @param purchaseUrl
-     *     The purchase_url
+     * @param purchaseUrl The purchase_url
      */
     public void setPurchaseUrl(Object purchaseUrl) {
         this.purchaseUrl = purchaseUrl;
     }
 
     /**
-     * 
-     * @return
-     *     The releaseMonth
+     * @return The releaseMonth
      */
     public Object getReleaseMonth() {
         return releaseMonth;
     }
 
     /**
-     * 
-     * @param releaseMonth
-     *     The release_month
+     * @param releaseMonth The release_month
      */
     public void setReleaseMonth(Object releaseMonth) {
         this.releaseMonth = releaseMonth;
     }
 
     /**
-     * 
-     * @return
-     *     The description
+     * @return The description
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * 
-     * @param description
-     *     The description
+     * @param description The description
      */
     public void setDescription(String description) {
         this.description = description;
     }
 
     /**
-     * 
-     * @return
-     *     The uri
+     * @return The uri
      */
     public String getUri() {
         return uri;
     }
 
     /**
-     * 
-     * @param uri
-     *     The uri
+     * @param uri The uri
      */
     public void setUri(String uri) {
         this.uri = uri;
     }
 
     /**
-     * 
-     * @return
-     *     The labelName
+     * @return The labelName
      */
     public Object getLabelName() {
         return labelName;
     }
 
     /**
-     * 
-     * @param labelName
-     *     The label_name
+     * @param labelName The label_name
      */
     public void setLabelName(Object labelName) {
         this.labelName = labelName;
     }
 
     /**
-     * 
-     * @return
-     *     The tagList
+     * @return The tagList
      */
     public String getTagList() {
         return tagList;
     }
 
     /**
-     * 
-     * @param tagList
-     *     The tag_list
+     * @param tagList The tag_list
      */
     public void setTagList(String tagList) {
         this.tagList = tagList;
     }
 
     /**
-     * 
-     * @return
-     *     The releaseYear
+     * @return The releaseYear
      */
     public Object getReleaseYear() {
         return releaseYear;
     }
 
     /**
-     * 
-     * @param releaseYear
-     *     The release_year
+     * @param releaseYear The release_year
      */
     public void setReleaseYear(Object releaseYear) {
         this.releaseYear = releaseYear;
     }
 
     /**
-     * 
-     * @return
-     *     The trackCount
+     * @return The trackCount
      */
     public Integer getTrackCount() {
         return trackCount;
     }
 
     /**
-     * 
-     * @param trackCount
-     *     The track_count
+     * @param trackCount The track_count
      */
     public void setTrackCount(Integer trackCount) {
         this.trackCount = trackCount;
     }
 
     /**
-     * 
-     * @return
-     *     The userId
+     * @return The userId
      */
     public Integer getUserId() {
         return userId;
     }
 
     /**
-     * 
-     * @param userId
-     *     The user_id
+     * @param userId The user_id
      */
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
     /**
-     * 
-     * @return
-     *     The lastModified
+     * @return The lastModified
      */
     public String getLastModified() {
         return lastModified;
     }
 
     /**
-     * 
-     * @param lastModified
-     *     The last_modified
+     * @param lastModified The last_modified
      */
     public void setLastModified(String lastModified) {
         this.lastModified = lastModified;
     }
 
     /**
-     * 
-     * @return
-     *     The license
+     * @return The license
      */
     public String getLicense() {
         return license;
     }
 
     /**
-     * 
-     * @param license
-     *     The license
+     * @param license The license
      */
     public void setLicense(String license) {
         this.license = license;
     }
 
     /**
-     * 
-     * @return
-     *     The tracks
+     * @return The tracks
      */
     public List<Track> getTracks() {
         return tracks;
     }
 
     /**
-     * 
-     * @param tracks
-     *     The tracks
+     * @param tracks The tracks
      */
     public void setTracks(List<Track> tracks) {
         this.tracks = tracks;
     }
 
     /**
-     * 
-     * @return
-     *     The playlistType
+     * @return The playlistType
      */
     public Object getPlaylistType() {
         return playlistType;
     }
 
     /**
-     * 
-     * @param playlistType
-     *     The playlist_type
+     * @param playlistType The playlist_type
      */
     public void setPlaylistType(Object playlistType) {
         this.playlistType = playlistType;
     }
 
     /**
-     * 
-     * @return
-     *     The id
+     * @return The id
      */
     public Integer getId() {
         return id;
     }
 
     /**
-     * 
-     * @param id
-     *     The id
+     * @param id The id
      */
     public void setId(Integer id) {
         this.id = id;
     }
 
     /**
-     * 
-     * @return
-     *     The downloadable
+     * @return The downloadable
      */
     public Boolean getDownloadable() {
         return downloadable;
     }
 
     /**
-     * 
-     * @param downloadable
-     *     The downloadable
+     * @param downloadable The downloadable
      */
     public void setDownloadable(Boolean downloadable) {
         this.downloadable = downloadable;
     }
 
     /**
-     * 
-     * @return
-     *     The sharing
+     * @return The sharing
      */
     public String getSharing() {
         return sharing;
     }
 
     /**
-     * 
-     * @param sharing
-     *     The sharing
+     * @param sharing The sharing
      */
     public void setSharing(String sharing) {
         this.sharing = sharing;
     }
 
     /**
-     * 
-     * @return
-     *     The createdAt
+     * @return The createdAt
      */
     public String getCreatedAt() {
         return createdAt;
     }
 
     /**
-     * 
-     * @param createdAt
-     *     The created_at
+     * @param createdAt The created_at
      */
     public void setCreatedAt(String createdAt) {
         this.createdAt = createdAt;
     }
 
     /**
-     * 
-     * @return
-     *     The release
+     * @return The release
      */
     public Object getRelease() {
         return release;
     }
 
     /**
-     * 
-     * @param release
-     *     The release
+     * @param release The release
      */
     public void setRelease(Object release) {
         this.release = release;
     }
 
     /**
-     * 
-     * @return
-     *     The kind
+     * @return The kind
      */
     public String getKind() {
         return kind;
     }
 
     /**
-     * 
-     * @param kind
-     *     The kind
+     * @param kind The kind
      */
     public void setKind(String kind) {
         this.kind = kind;
     }
 
     /**
-     * 
-     * @return
-     *     The title
+     * @return The title
      */
     public String getTitle() {
         return title;
     }
 
     /**
-     * 
-     * @param title
-     *     The title
+     * @param title The title
      */
     public void setTitle(String title) {
         this.title = title;
     }
 
     /**
-     * 
-     * @return
-     *     The type
+     * @return The type
      */
     public Object getType() {
         return type;
     }
 
     /**
-     * 
-     * @param type
-     *     The type
+     * @param type The type
      */
     public void setType(Object type) {
         this.type = type;
     }
 
     /**
-     * 
-     * @return
-     *     The purchaseTitle
+     * @return The purchaseTitle
      */
     public Object getPurchaseTitle() {
         return purchaseTitle;
     }
 
     /**
-     * 
-     * @param purchaseTitle
-     *     The purchase_title
+     * @param purchaseTitle The purchase_title
      */
     public void setPurchaseTitle(Object purchaseTitle) {
         this.purchaseTitle = purchaseTitle;
     }
 
     /**
-     * 
-     * @return
-     *     The createdWith
+     * @return The createdWith
      */
     public CreatedWith getCreatedWith() {
         return createdWith;
     }
 
     /**
-     * 
-     * @param createdWith
-     *     The created_with
+     * @param createdWith The created_with
      */
     public void setCreatedWith(CreatedWith createdWith) {
         this.createdWith = createdWith;
     }
 
     /**
-     * 
-     * @return
-     *     The artworkUrl
+     * @return The artworkUrl
      */
     public String getArtworkUrl() {
         return artworkUrl;
     }
 
     /**
-     * 
-     * @param artworkUrl
-     *     The artwork_url
+     * @param artworkUrl The artwork_url
      */
     public void setArtworkUrl(String artworkUrl) {
         this.artworkUrl = artworkUrl;
     }
 
     /**
-     * 
-     * @return
-     *     The ean
+     * @return The ean
      */
     public Object getEan() {
         return ean;
     }
 
     /**
-     * 
-     * @param ean
-     *     The ean
+     * @param ean The ean
      */
     public void setEan(Object ean) {
         this.ean = ean;
     }
 
     /**
-     * 
-     * @return
-     *     The streamable
+     * @return The streamable
      */
     public Boolean getStreamable() {
         return streamable;
     }
 
     /**
-     * 
-     * @param streamable
-     *     The streamable
+     * @param streamable The streamable
      */
     public void setStreamable(Boolean streamable) {
         this.streamable = streamable;
     }
 
     /**
-     * 
-     * @return
-     *     The user
+     * @return The user
      */
     public User getUser() {
         return user;
     }
 
     /**
-     * 
-     * @param user
-     *     The user
+     * @param user The user
      */
     public void setUser(User user) {
         this.user = user;
     }
 
     /**
-     * 
-     * @return
-     *     The embeddableBy
+     * @return The embeddableBy
      */
     public String getEmbeddableBy() {
         return embeddableBy;
     }
 
     /**
-     * 
-     * @param embeddableBy
-     *     The embeddable_by
+     * @param embeddableBy The embeddable_by
      */
     public void setEmbeddableBy(String embeddableBy) {
         this.embeddableBy = embeddableBy;
     }
 
     /**
-     * 
-     * @return
-     *     The labelId
+     * @return The labelId
      */
     public Object getLabelId() {
         return labelId;
     }
 
     /**
-     * 
-     * @param labelId
-     *     The label_id
+     * @param labelId The label_id
      */
     public void setLabelId(Object labelId) {
         this.labelId = labelId;

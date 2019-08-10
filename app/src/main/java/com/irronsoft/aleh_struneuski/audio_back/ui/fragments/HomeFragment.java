@@ -1,16 +1,11 @@
 package com.irronsoft.aleh_struneuski.audio_back.ui.fragments;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,21 +14,13 @@ import android.widget.GridView;
 import com.irronsoft.aleh_struneuski.audio_back.Background;
 import com.irronsoft.aleh_struneuski.audio_back.R;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.PlayList;
-import com.irronsoft.aleh_struneuski.audio_back.broadcast.call.CallReceiver;
 import com.irronsoft.aleh_struneuski.audio_back.broadcast.network.ConnectionBroadcastReceiver;
-import com.irronsoft.aleh_struneuski.audio_back.network.httpclient.RestClient;
-import com.irronsoft.aleh_struneuski.audio_back.network.httpclient.services.SoundCloundService;
 import com.irronsoft.aleh_struneuski.audio_back.ui.adapters.GridViewAdapter;
 import com.irronsoft.aleh_struneuski.audio_back.utils.NetworkUtils;
 import com.irronsoft.aleh_struneuski.audio_back.utils.ResolutionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class HomeFragment extends Fragment {
 
@@ -66,7 +53,7 @@ public class HomeFragment extends Fragment {
         mBackground = (Background) getActivity().getApplication();
 
         mGridView = (GridView) getView().findViewById(R.id.gridView);
-        mGridView.setHorizontalSpacing(ResolutionUtils.convertPercentToPixelWidth(getContext().getApplicationContext(),1.25f));
+        mGridView.setHorizontalSpacing(ResolutionUtils.convertPercentToPixelWidth(getContext().getApplicationContext(), 1.25f));
         mGridView.setVerticalSpacing(ResolutionUtils.convertPercentToPixelHight(getContext().getApplicationContext(), 0.7525f));
 
         mPlayListGridData = new ArrayList<>();

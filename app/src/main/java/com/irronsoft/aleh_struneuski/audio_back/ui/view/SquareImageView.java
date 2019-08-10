@@ -3,10 +3,6 @@ package com.irronsoft.aleh_struneuski.audio_back.ui.view;
 import android.content.Context;
 import android.util.AttributeSet;
 
-/**
- * Created by alehstruneuski on 6/23/17.
- */
-
 public class SquareImageView extends CustomImageView {
 
     public SquareImageView(Context context) {

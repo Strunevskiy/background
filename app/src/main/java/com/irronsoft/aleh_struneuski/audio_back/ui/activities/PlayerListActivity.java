@@ -2,21 +2,12 @@ package com.irronsoft.aleh_struneuski.audio_back.ui.activities;
 
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.v4.app.FragmentActivity;
 
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 
 import com.irronsoft.aleh_struneuski.audio_back.R;
@@ -32,9 +23,6 @@ import com.irronsoft.aleh_struneuski.audio_back.utils.PlayerFragmentUtils;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by alehstruneuski on 6/13/16.
- */
 public class PlayerListActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener, OnTrackListener {
 
     private static final String TAG = PlayerListActivity.class.getSimpleName();
@@ -62,7 +50,7 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
         getSupportActionBar().setTitle(TAG_TRACK_LIST);
 
         mListItems = this.getIntent().getParcelableArrayListExtra("album_track_list");
-        doFillter(mListItems);
+        doFilter(mListItems);
 
         trackDao = new TrackDaoImpl(getApplicationContext());
         trackDao.tagDowloadedTracks(mListItems);
@@ -73,13 +61,13 @@ public class PlayerListActivity extends AppCompatActivity implements View.OnClic
         listView.setOnItemClickListener(this);
     }
 
-    private void doFillter(List<Track> listOfTrack) {
-        Iterator<Track> tracks = listOfTrack.iterator();
-        while (tracks.hasNext()) {
-            Track track = tracks.next();
+    private void doFilter(List<Track> tracks) {
+        Iterator<Track> tracksIterator = tracks.iterator();
+        while (tracksIterator.hasNext()) {
+            Track track = tracksIterator.next();
             int lengthAfterSplit = track.getTitle().split("(-|–)").length;
             if (lengthAfterSplit != 2) {
-                tracks.remove();
+                tracksIterator.remove();
             }
         }
     }
