@@ -8,4 +8,3 @@
 * [Retrofit](https://github.com/square/retrofit) - Type-safe HTTP client for Android and Java by Square, Inc.
 * [Picasso](https://github.com/square/picasso) - A powerful image downloading and caching library for Android.
 * [MaterialTutorial](https://github.com/cadialex/MaterialTutorial) - An Android library that provides a simple Material-Designed tutorial.
-* [Async](https://github.com/afollestad/async) - A library designed to make the organized execution of async processes in Java easy.
