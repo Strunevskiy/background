@@ -28,7 +28,7 @@
             android:textColor="@android:color/white" />
     </LinearLayout>
     <ImageView
-        android:id="@+id/overflow"
+        android:id="@+id/album_soundcloud_logo"
         android:layout_width="56dp"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/grid_item_image"
