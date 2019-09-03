@@ -53,5 +53,6 @@
         android:layout_alignBottom="@+id/track_meta_data_container"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:src="@drawable/ic_sound_cloud" />
+        android:src="@drawable/ic_sound_cloud"
+        android:tint="@color/colorPrimary" />
 </RelativeLayout>
