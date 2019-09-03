@@ -18,8 +18,6 @@
             android:layout_toRightOf="@id/selected_track_image"
             android:background="@color/cell"
             android:alpha="0.7">
-
-
             <ImageView
                 android:id="@+id/image_bluer_player"
                 android:layout_width="match_parent"
@@ -27,13 +25,27 @@
                 android:background="@color/cell"
                 android:alpha="0.5"/>
 
+            <RelativeLayout
+                android:id="@+id/logo"
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:paddingLeft="25dip"
+                android:paddingRight="25dip">
 
+                <ImageView
+                    android:id="@+id/sound_cloud_logo_player"
+                    android:layout_width="70dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/ic_sound_cloud_player" />
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/top_nested_toolbar_title"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_alignParentTop="true"
+                android:layout_height="35dp"
+                android:layout_below="@+id/logo"
                 android:paddingLeft="25dip"
                 android:paddingRight="25dip">
 
@@ -85,23 +97,6 @@
                     android:src="@drawable/ic_fast_forward" />
 
 
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:id="@+id/logo"
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:layout_below="@+id/bottom_nested_toolbar_player_controls"
-                android:paddingLeft="25dip"
-                android:paddingRight="25dip">
-
-                <ImageView
-                    android:id="@+id/sound_cloud_logo_player"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_centerHorizontal="true"
-                    android:src="@drawable/ic_sound_cloud_player" />
             </RelativeLayout>
 
         </RelativeLayout>

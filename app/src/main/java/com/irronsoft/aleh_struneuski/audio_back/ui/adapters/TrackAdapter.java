@@ -13,8 +13,6 @@ import com.irronsoft.aleh_struneuski.audio_back.R;
 import com.irronsoft.aleh_struneuski.audio_back.bean.soundclound.Track;
 import com.squareup.picasso.Picasso;
 
-import net.bohush.geometricprogressview.GeometricProgressView;
-
 import java.util.List;
 
 public class TrackAdapter extends BaseAdapter {
@@ -54,7 +52,6 @@ public class TrackAdapter extends BaseAdapter {
             holder.trackImageView = (ImageView) convertView.findViewById(R.id.track_image);
             holder.trackTitleTextView = (TextView) convertView.findViewById(R.id.track_title);
             holder.trackSingerTextView = (TextView) convertView.findViewById(R.id.track_singer);
-            holder.dowloadImageView = (ImageView) convertView.findViewById(R.id.dowload_image);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -83,7 +80,5 @@ public class TrackAdapter extends BaseAdapter {
         ImageView trackImageView;
         TextView trackTitleTextView;
         TextView trackSingerTextView;
-        ImageView dowloadImageView;
-        GeometricProgressView progressView;
     }
 }

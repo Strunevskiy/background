@@ -65,6 +65,6 @@
 
     <string name="app_des">Background is music player with predefined playlists of background music</string>
     <string name="playlists_des">There are always playlists of background music for relaxing</string>
-    <string name="search_des">Creating your own music collection using search is easy</string>
+    <string name="search_des">Listen to music you enjoy using search</string>
     <string name="feedback_des">Any feedback about this app is greatly appreciated. Please take some time to rate it on the play store.</string>
 </resources>

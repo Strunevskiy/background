@@ -23,7 +23,7 @@
 
         <RelativeLayout
             android:id="@+id/track_meta_data"
-            android:layout_width="match_parent"
+            android:layout_width="236dp"
             android:layout_height="match_parent"
             android:paddingTop="18dip"
             android:paddingBottom="18dip">
@@ -32,9 +32,9 @@
                 android:id="@+id/track_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="21dp"
                 android:maxLines="1"
-                android:textColor="@color/title"/>
+                android:textColor="@color/title"
+                android:textSize="21dp" />
 
             <TextView
                 android:id="@+id/track_singer"
@@ -42,21 +42,16 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/track_title"
                 android:maxLines="1"
-                android:textSize="18dp"
-                android:textColor="@color/sub_title"/>
+                android:textColor="@color/sub_title"
+                android:textSize="18dp" />
 
         </RelativeLayout>
-
     </RelativeLayout>
     <ImageView
-        android:id="@+id/dowload_image"
-        android:layout_alignEnd="@id/track_meta_data_container"
+        android:id="@+id/sound_cloud_logo"
         android:layout_alignRight="@+id/track_meta_data_container"
         android:layout_alignBottom="@+id/track_meta_data_container"
-        android:scaleX="1.5"
-        android:scaleY="1.5"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp"
         android:layout_height="wrap_content"
-        android:layout_width="wrap_content" />
+        android:layout_width="wrap_content"
+        android:src="@drawable/ic_sound_cloud" />
 </RelativeLayout>
