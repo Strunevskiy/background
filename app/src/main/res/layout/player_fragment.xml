@@ -11,8 +11,6 @@
             android:layout_width="@dimen/player_height"
             android:layout_height="match_parent"/>
 
-
-
         <RelativeLayout
             android:id="@+id/nested_toolbar"
             android:layout_width="match_parent"
@@ -34,7 +32,7 @@
             <RelativeLayout
                 android:id="@+id/top_nested_toolbar_title"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="40dp"
                 android:layout_alignParentTop="true"
                 android:paddingLeft="25dip"
                 android:paddingRight="25dip">
@@ -53,17 +51,14 @@
                     android:singleLine="true"
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"/>
-
-
             </RelativeLayout>
-
 
 
             <RelativeLayout
                 android:id="@+id/bottom_nested_toolbar_player_controls"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/top_nested_toolbar_title"
                 android:paddingLeft="25dip"
                 android:paddingRight="25dip">
 
@@ -72,7 +67,7 @@
                     android:layout_width="@dimen/image_size"
                     android:layout_height="@dimen/image_size"
                     android:layout_centerInParent="true"
-                    android:src= "@drawable/ic_pause"/>
+                    android:src="@drawable/ic_pause" />
 
 
                 <ImageView
@@ -80,16 +75,33 @@
                     android:layout_width="@dimen/image_size"
                     android:layout_height="@dimen/image_size"
                     android:layout_alignParentLeft="true"
-                    android:src = "@drawable/ic_rewind"/>
+                    android:src="@drawable/ic_rewind" />
+
                 <ImageView
                     android:id="@+id/player_control_next"
                     android:layout_width="@dimen/image_size"
                     android:layout_height="@dimen/image_size"
                     android:layout_alignParentRight="true"
-                    android:src = "@drawable/ic_fast_forward"/>
+                    android:src="@drawable/ic_fast_forward" />
 
 
+            </RelativeLayout>
 
+
+            <RelativeLayout
+                android:id="@+id/logo"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_below="@+id/bottom_nested_toolbar_player_controls"
+                android:paddingLeft="25dip"
+                android:paddingRight="25dip">
+
+                <ImageView
+                    android:id="@+id/sound_cloud_logo_player"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:src="@drawable/ic_sound_cloud_player" />
             </RelativeLayout>
 
         </RelativeLayout>
