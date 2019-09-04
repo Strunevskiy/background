@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 29
 
     defaultConfig {
-        applicationId "com.irronsoft.aleh_struneuski.audio_back"
+        applicationId "com.aleh.struneuski.background"
         minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1
+        targetSdkVersion 29
+        versionCode 10000
         versionName "1.0"
     }
     buildTypes {

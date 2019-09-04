@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.irronsoft.aleh_struneuski.audio_back.ui.fragments.MyMusicFragment">
+    tools:context="com.aleh.struneuski.audio_back.ui.fragments.MyMusicFragment">
 
     <LinearLayout
         android:id="@+id/empty"
@@ -18,7 +18,7 @@
         android:visibility="gone"
         android:layout_below="@+id/app_bar_layout">
 
-        <com.irronsoft.aleh_struneuski.audio_back.ui.view.SquareImageView
+        <com.aleh.struneuski.background.ui.view.SquareImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/ic_mood_bad"

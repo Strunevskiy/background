@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.irronsoft.aleh_struneuski.audio_back.ui.fragments.SearchForTrackFragment">
+    tools:context="com.aleh.struneuski.audio_back.com.irronsoft.aleh_struneuski.v1.ui.fragments.SearchForTrackFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
