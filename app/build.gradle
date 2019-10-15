@@ -7,7 +7,7 @@ android {
         applicationId "com.aleh.struneuski.background"
         minSdkVersion 15
         targetSdkVersion 29
-        versionCode 10000
+        versionCode 10001
         versionName "1.0"
     }
     buildTypes {

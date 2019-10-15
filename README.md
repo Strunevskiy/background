@@ -1,6 +1,6 @@
 # Background - The Great Music App
-* Background is music player with predefined playlists of background music for relax, party, bars and restaurants. 
-* Creating your own music collection is easy using search of the application.
+Background is music player with predefined playlists of background music for relax, party, bars and restaurants. 
+[Google play store](https://play.google.com/store/apps/details?id=com.aleh.struneuski.background)
 
 # Libraries used to build app
 * [ExoPlayer](https://github.com/google/ExoPlayer) - ExoPlayer is an application level media player for Android.
