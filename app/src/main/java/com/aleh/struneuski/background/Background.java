@@ -10,10 +10,13 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.aleh.struneuski.background.bean.soundclound.AccessToken;
 import com.aleh.struneuski.background.bean.soundclound.PlayList;
+import com.aleh.struneuski.background.constants.ProjectConstants;
 import com.aleh.struneuski.background.network.httpclient.RestClient;
 import com.aleh.struneuski.background.network.httpclient.services.SoundCloundService;
 
+import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -33,26 +36,39 @@ public class Background extends Application {
     public void extractPlayList(final ArrayAdapter arrayAdapter) {
 
         final RestClient restClient = RestClient.getInstance();
-        Retrofit retrofitClient = restClient.getRetrofitClient();
-        SoundCloundService soundCloundService = retrofitClient.create(SoundCloundService.class);
-
-        final Call<List<PlayList>> playList = soundCloundService.getPlayLists();
-        playList.enqueue(new Callback<List<PlayList>>() {
+        final Retrofit retrofitClient = restClient.getRetrofitClient();
+        final SoundCloundService soundCloundService = retrofitClient.create(SoundCloundService.class);
+        final Call<AccessToken> accessTokenCall = soundCloundService.getAccessToken(ProjectConstants.CLIENT_ID, ProjectConstants.CLIENT_SECRET, ProjectConstants.GRANT_TYPE);
+        accessTokenCall.enqueue(new Callback<AccessToken>() {
             @Override
-            public void onResponse(Call<List<PlayList>> call, Response<List<PlayList>> response) {
-                List<PlayList> playLists = response.body();
+            public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
+                String authorizationHeaderValue = String.format("OAuth %s", response.body().getAccessToken());
+                final Call<List<PlayList>> playList = soundCloundService.getPlayLists(authorizationHeaderValue);
+                playList.enqueue(new Callback<List<PlayList>>() {
+                    @Override
+                    public void onResponse(Call<List<PlayList>> call, Response<List<PlayList>> response) {
+                        System.out.println(response.toString());
+                        List<PlayList> playLists = response.body();
+                        System.out.println(playLists);
 
-                if (null != arrayAdapter) {
-                    arrayAdapter.clear();
-                    arrayAdapter.addAll(playLists);
+                        if (null != arrayAdapter) {
+                            arrayAdapter.clear();
+                            arrayAdapter.addAll(playLists);
 
-                    arrayAdapter.notifyDataSetChanged();
-                }
+                            arrayAdapter.notifyDataSetChanged();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<PlayList>> call, Throwable t) {
+                        isErrorPlayList = true;
+                    }
+                });
             }
 
             @Override
-            public void onFailure(Call<List<PlayList>> call, Throwable t) {
-                isErrorPlayList = true;
+            public void onFailure(Call<AccessToken> call, Throwable throwable) {
+
             }
         });
     }
