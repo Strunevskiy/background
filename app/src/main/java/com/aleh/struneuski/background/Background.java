@@ -26,6 +26,7 @@ import retrofit2.Retrofit;
 
 public class Background extends Application {
 
+    private String authorizationHeaderValue;
     private boolean isErrorPlayList;
 
     @Override
@@ -42,7 +43,7 @@ public class Background extends Application {
         accessTokenCall.enqueue(new Callback<AccessToken>() {
             @Override
             public void onResponse(Call<AccessToken> call, Response<AccessToken> response) {
-                String authorizationHeaderValue = String.format("OAuth %s", response.body().getAccessToken());
+                authorizationHeaderValue = String.format("OAuth %s", response.body().getAccessToken());
                 final Call<List<PlayList>> playList = soundCloundService.getPlayLists(authorizationHeaderValue);
                 playList.enqueue(new Callback<List<PlayList>>() {
                     @Override
@@ -93,6 +94,10 @@ public class Background extends Application {
         toast.setMargin(0, 0);
         toast.setGravity(Gravity.FILL_HORIZONTAL | Gravity.BOTTOM, 0, 0);
         toast.show();
+    }
+
+    public String getAuthorizationHeaderValue() {
+        return authorizationHeaderValue;
     }
 
 }

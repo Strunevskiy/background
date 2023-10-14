@@ -17,6 +17,15 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.aleh.struneuski.background.Background;
+import com.aleh.struneuski.background.R;
+import com.aleh.struneuski.background.bean.soundclound.Track;
+import com.aleh.struneuski.background.broadcast.call.AbstractCallReceiver;
+import com.aleh.struneuski.background.broadcast.call.CallReceiver;
+import com.aleh.struneuski.background.broadcast.headset.HeadsetReceiver;
+import com.aleh.struneuski.background.ui.listeners.OnPlayerControlListener;
+import com.aleh.struneuski.background.ui.listeners.OnTrackListener;
+import com.aleh.struneuski.background.utils.BlurBuilder;
 import com.google.android.exoplayer2.DefaultLoadControl;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -32,21 +41,13 @@ import com.google.android.exoplayer2.source.TrackGroupArray;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.upstream.FileDataSourceFactory;
+import com.google.android.exoplayer2.upstream.HttpDataSource;
 import com.google.android.exoplayer2.upstream.cache.Cache;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 import com.google.android.exoplayer2.upstream.cache.NoOpCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
-import com.aleh.struneuski.background.R;
-import com.aleh.struneuski.background.bean.soundclound.Track;
-import com.aleh.struneuski.background.broadcast.call.AbstractCallReceiver;
-import com.aleh.struneuski.background.broadcast.call.CallReceiver;
-import com.aleh.struneuski.background.broadcast.headset.HeadsetReceiver;
-import com.aleh.struneuski.background.constants.ProjectConstants;
-import com.aleh.struneuski.background.ui.listeners.OnPlayerControlListener;
-import com.aleh.struneuski.background.ui.listeners.OnTrackListener;
-import com.aleh.struneuski.background.utils.BlurBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -73,6 +74,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, On
 
     private ImageView mPlayerControlPrev;
     private ImageView mPlayerControlNext;
+    private Background mBackground;
 
     private Target loadtarget;
     private Track trackOnLoad;
@@ -80,7 +82,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, On
     private boolean isAttachedInitially;
 
     private SimpleExoPlayer exoPlayer;
-    private DefaultHttpDataSourceFactory dataSourceFactory;
+    private CustomDataSourceFactory dataSourceFactory;
     private ExtractorsFactory extractor;
     private MediaSource audioSource;
     private CacheDataSourceFactory cacheDataSource;
@@ -111,6 +113,7 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, On
         mSelectedTrackImage = (ImageView) getView().findViewById(R.id.selected_track_image);
         mBlurePlayer = (ImageView) getView().findViewById(R.id.image_bluer_player);
 
+        mBackground = (Background) getActivity().getApplication();
 
         Cache cache = new SimpleCache(getContext().getApplicationContext().getCacheDir(), new NoOpCacheEvictor());
 
@@ -120,7 +123,8 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, On
         LoadControl loadControl = new DefaultLoadControl();
         exoPlayer = ExoPlayerFactory.newSimpleInstance(getContext().getApplicationContext(), trackSelector, loadControl);
         extractor = new DefaultExtractorsFactory();
-        dataSourceFactory = new DefaultHttpDataSourceFactory("Android");
+
+        dataSourceFactory = new CustomDataSourceFactory("Authorization", mBackground.getAuthorizationHeaderValue());
         cacheDataSource = new CacheDataSourceFactory(cache, dataSourceFactory, 0);
 
         exoPlayer.setPlayWhenReady(true);
@@ -208,7 +212,6 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, On
 
         String urlOfTrackStream = track.getStreamURL();
         if (!track.isDowload()) {
-            urlOfTrackStream += "?client_id=" + ProjectConstants.CLIENT_ID;
             audioSource = new ExtractorMediaSource(Uri.parse(urlOfTrackStream), cacheDataSource, extractor, null, null);
         } else {
             audioSource = new ExtractorMediaSource(Uri.parse(urlOfTrackStream), new FileDataSourceFactory(), extractor, null, null);
@@ -256,6 +259,33 @@ public class PlayerFragment extends Fragment implements View.OnClickListener, On
             exoPlayer = null;
         }
         mOnTrackListener = null;
+    }
+
+    public static class CustomDataSourceFactory implements HttpDataSource.Factory {
+
+        private HttpDataSource httpDataSource;
+        private String authorizationHeaderName;
+        private String authorizationHeaderValue;
+
+        public CustomDataSourceFactory(String authorizationHeaderName,
+                                       String authorizationHeaderValue) {
+            this.authorizationHeaderName = authorizationHeaderName;
+            this.authorizationHeaderValue = authorizationHeaderValue;
+        }
+
+        @Override
+        public HttpDataSource createDataSource() {
+            httpDataSource = new DefaultHttpDataSource("Android", null);
+            httpDataSource.setRequestProperty(authorizationHeaderName, authorizationHeaderValue);
+            return httpDataSource;
+        }
+
+        public void setAuthorizationHeader(
+                String authorizationHeaderName,
+                String authorizationHeaderValue) {
+            this.authorizationHeaderName = authorizationHeaderName;
+            this.authorizationHeaderValue = authorizationHeaderValue;
+        }
     }
 
     @Override
